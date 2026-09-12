@@ -12,7 +12,7 @@ import json, re, subprocess, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from kitobdan import lotinga, kirillga, slugify
+from kitobdan import lotinga, kirillga, slugify, apostrof
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "Sa'dullo Quronov" / "maqolalar"
@@ -29,7 +29,7 @@ YOZUVLAR = [
     {"fayl": "2. Ғўрўғли романи.pdf", "til": "lat", "janr": "Maqola", "yil": 2023,
      "sarlavha": "Badiiy asardagi absurd va inson konsepsiyasi",
      "manba": "Adabiy meros, 2023, 3-4-son",
-     "boshi": "BADIIY ASARDAGI ABSURD VA", "oxiri": "FANIMIZ FIDOYILARI"},
+     "boshi": "BADIIY ASARDAGI ABSURD VA", "oxiri": "Foydalanilgan adabiyotlar ro‘yxati:"},
 
     {"fayl": "3. Лолазор романи.pdf", "til": "lat", "janr": "Maqola", "yil": 2023,
      "sarlavha": "«Lolazor» romanida inson konsepsiyasi",
@@ -185,10 +185,12 @@ YOZUVLAR = [
 ]
 
 AXLAT = re.compile(
-    r"^(\d{1,4}|[IVXLC]+)$"                              # sahifa raqami
-    r"|^(Илмий хабарнома|Ilmiy xabarnoma|Scientific Bulletin|ADABIY MEROS"
-    r"|TANQID VA TAHLIL|LITERARY|ADABIYOTSHUNOSLIK|АДАБИЁТШУНОСЛИК|ТАРИХ|TARIX"
-    r"|ISSN|ISNN|УДК|UDK|UO‘K|DOI|www\.|E-mail|Тел|Volume|Web)", re.I)
+    r"^\d{1,4}$"                                                         # sahifa raqami
+    # boʻlim kolontitullari faqat butun satr boʻlsa («Тарихнинг…» kabi matn satrlari emas!)
+    r"|^(ТАРИХ|TARIX|LITERARY( STUDIES)?|ADABIYOTSHUNOSLIK|АДАБИЁТШУНОСЛИК|TANQID VA TAHLIL"
+    r"|ADABIY MEROS|FANIMIZ FIDOYILARI)(\s+(TANQID VA TAHLIL|ADABIY MEROS))*$"
+    r"|^(Илмий хабарнома\.|Ilmiy xabarnoma\.|Scientific Bulletin\.|ISSN\b|ISNN\b|УДК\b|UDK\b"
+    r"|UO‘K\b|DOI\b|www\.|E-mail\b|Тел\.?:|Volume\s+\d|Website:)", re.I)
 
 # izoh (snoska) satrlari: «Шу асар. Б. 79.», «Ўша манба. Б. 12.»
 SNOSKA = re.compile(r"^(Шу асар|Ўша асар|Ўша манба|Shu asar|O‘sha asar)\b")
@@ -239,9 +241,64 @@ def ocr_matn(fayl, boshi=1, oxiri=None):
     return matn
 
 
+def pdf_ustunli_matn(fayl):
+    """PDF matnini ustunlarni hisobga olib chiqaradi (poppler -bbox-layout).
+
+    Har sahifada matn bloklari koordinatasi bilan olinadi. Tor bloklar sahifaning
+    chap yoki oʻng yarmida boʻlsa, ikki ustunli qism deb hisoblanadi: avval chap
+    ustun yuqoridan pastga, keyin oʻng ustun oʻqiladi. Keng bloklar (sarlavha,
+    annotatsiya) boʻlim chegarasi vazifasini bajaradi.
+    """
+    import html as _html
+    r = subprocess.run(["pdftotext", "-bbox-layout", str(fayl), "-"], capture_output=True)
+    xml = r.stdout.decode("utf-8", "replace")
+    chiqish = []
+    for sahifa in re.finditer(r'<page width="([\d.]+)" height="[\d.]+">(.*?)</page>', xml, re.S):
+        kenglik = float(sahifa.group(1))
+        orta = kenglik / 2
+        bloklar = []
+        for b in re.finditer(r'<block xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">(.*?)</block>',
+                             sahifa.group(2), re.S):
+            x0, y0, x1, y1 = map(float, b.groups()[:4])
+            satrlar = []
+            for satr in re.finditer(r"<line[^>]*>(.*?)</line>", b.group(5), re.S):
+                sozlar = re.findall(r"<word[^>]*>(.*?)</word>", satr.group(1), re.S)
+                if sozlar:
+                    satrlar.append(_html.unescape(" ".join(sozlar)))
+            if satrlar:
+                bloklar.append((x0, y0, x1, y1, satrlar))
+        if not bloklar:
+            continue
+        tor = [b for b in bloklar if (b[2] - b[0]) < kenglik * 0.55]
+        ikki_ustun = (len(tor) >= 0.4 * len(bloklar)
+                      and any(b[2] <= orta + 15 for b in tor) and any(b[0] >= orta - 15 for b in tor))
+        if not ikki_ustun:
+            tartib = sorted(bloklar, key=lambda b: (round(b[1]), b[0]))
+        else:
+            tartib, bolim = [], []
+            def bolimni_yoz():
+                chap = sorted([b for b in bolim if b[0] < orta - 15], key=lambda b: b[1])
+                ong = sorted([b for b in bolim if b[0] >= orta - 15], key=lambda b: b[1])
+                tartib.extend(chap + ong)
+                bolim.clear()
+            for b in sorted(bloklar, key=lambda b: b[1]):
+                if (b[2] - b[0]) >= kenglik * 0.55:
+                    bolimni_yoz()
+                    tartib.append(b)
+                else:
+                    bolim.append(b)
+            bolimni_yoz()
+        for b in tartib:
+            chiqish.append("\n".join(b[4]))
+            chiqish.append("")
+    matn = "\n".join(chiqish)
+    # satr oxiridagi boʻgʻin koʻchirishlarini tiklash: «konsep-\nsiya» → «konsepsiya»
+    return re.sub(r"(\w)[-­]\n(\w)", r"\1\2", matn)
+
+
 def xom_matn(fayl):
     if fayl.suffix.lower() == ".pdf":
-        r = subprocess.run(["pdftotext", str(fayl), "-"], capture_output=True)
+        return pdf_ustunli_matn(fayl)
     else:
         r = subprocess.run(["textutil", "-convert", "txt", "-stdout", str(fayl)],
                            capture_output=True)
@@ -270,7 +327,10 @@ def kolontitullar(matn):
         q = q.strip()
         if q and len(q) < 90:
             sanoq[q] = sanoq.get(q, 0) + 1
-    return {q for q, n in sanoq.items() if n >= 3}
+    jurnal = re.compile(r"xabarnoma|хабарнома|bulletin|meros|мерос|journal|журнал|tadqiqot|тадқиқот|"
+                        r"yulduzi|юлдузи|adabiyot|адабиёт|ISSN|№|\|", re.I)
+    return {q for q, n in sanoq.items()
+            if n >= 3 and (re.search(r"\d", q) or q.isupper() or jurnal.search(q) or len(q) >= 30)}
 
 
 def abzaclar(matn, satr_abzac=False):
@@ -306,7 +366,7 @@ def abzaclar(matn, satr_abzac=False):
             if len(t) > 25:
                 p = p.replace(t, " ")
         p = re.sub(r"\s+", " ", p).strip()
-        if len(p) < 40 and not p.endswith((".", "!", "?", ":")):
+        if len(p) < 40 and not p.endswith((".", "!", "?", ":")) and (p.isupper() or not re.search(r"[a-zа-яўқғҳ]{3}", p)):
             continue                       # sarlavha bo'laklari, imzo qoldiqlari
         tozalangan.append(p)
     return tozalangan
@@ -323,6 +383,212 @@ def bosh_tozalash(p):
         sozlar.pop(0)
     matn = " ".join(sozlar)
     return matn[:1].upper() + matn[1:]           # «мазкур мақолада…» → «Мазкур…»
+
+
+# ---------- matnni tozalash (PDF, eski shrift va OCR qoldiqlari) ----------
+RUSCHA_ANNOT = re.compile(r"\b(статье|статья|Ключевые слова|Аннотация:?\s+В)\b|"
+                          r"^(Аннотация|Annotatsiya)\s*:?\s*(В|V)\s", re.I)
+RUSCHA_HARF = re.compile(r"[ыщЫЩ]")
+INGLIZCHA_ANNOT = re.compile(r"^(Abstract|Annotation|Resume|Key ?words)\b[.:]?", re.I)
+SNOSKA_RAQAM = re.compile(r"(?:(?<=[a-zʻʼа-яўқғҳ”»!?])|(?<=[a-zʻʼа-яўқғҳ”»]\.))\d{1,2}(?=[\s.,;:)]|$)")
+BIBLIO_SNOSKA = re.compile(r"(–|-)\s*(B|S|С|Б|C|P|Pp|T|Т)\.\s?\d+[\d–\-,\s]*\.?\s*$|"
+                           r"(Toshkent|Тошкент|Москва|Moskva|Moscow|Ленинград|T\.|Т\.)\s*:\s*.{0,60}\b(19|20)\d\d\b|"
+                           r"\s//\s*.{2,60}\b(19|20)\d\d\b|"
+                           r"\b(19|20)\d\d\b.{0,20}\b(С|S|B|Б|P|Р)\.\s?\d+[\d–\-]*\.?\s*$|"
+                           r"\b(Под (общ\. )?ред|Учебник|Издательство|Изд-во)\b|^https?://\S+$")
+SAHIFA_KOLONTITUL = re.compile(r"\b\d{1,3}\s*\|\s*P a g e\b|(?:\b\S \S \S \S (?:\S ){2,}\S\b)|\|\s*\d{1,3}\b")
+WORD_HAVOLA = re.compile(r'HYPERLINK\s+"[^"]*"|\\o\s+"[^"]*"|\S*[?&](ei|usg|sa|ved)=\S*')
+
+
+QOLDA_TUZATISH = {
+    "«Ming bir qiyofa» romanida erkin inson gʻoyasi": [
+        # sahifa kolontituli va sahifa osti snoskalari (skanerdan)
+        ("\"Минг бир қиёфа\" романида эркин инсон ғояси ", ""),
+        # OCR va terish xatolari — asl skaner bilan solishtirildi
+        ("Узбек адабиётида", "Ўзбек адабиётида"), ("Уртага ташланган", "Ўртага ташланган"),
+        ("Утмиш ҳақида", "Ўтмиш ҳақида"), ("Бунгасабаб", "Бунга сабаб"), ("позтика", "поэтика"),
+        ("борликдаги", "борлиқдаги"), ("максад", "мақсад"), ("ҳодислар", "ҳодисалар"),
+        ("собик", "собиқ"), ("чукур", "чуқур"), ("каҳрамонини", "қаҳрамонини"),
+        ("Бирок", "Бироқ"), ("тасвирларган", "тасвирланган"), ("Минг бир киёфа", "Минг бир қиёфа"),
+        ("мустақиллика", "мустақилликка"), ("Раҳим П,", "Раҳим II,"), ("Бурхон", "Бурҳон"),
+        ("фаслафасига", "фалсафасига"), ("кадимий", "қадимий"), ("колган эски", "қолган эски"),
+        ("ишончсизикни", "ишончсизликни"), ("фолъклор", "фольклор"), ("серкирра", "серқирра"),
+        ("кулъминацияси", "кульминацияси"), ("базан", "баъзан"), ("чирмовукдай", "чирмовиқдай"),
+        ("кон тўкмай", "қон тўкмай"), ("аср олиш", "асир олиш"), ("хукумати", "ҳукумати"),
+        ("ҳар кандай вокеага", "ҳар қандай воқеага"), ("хам уради", "ҳам уради"),
+        ("нимага ўхшаш", "нимага ўхшаш"),
+        ("қаламга олди Ёзувчида", "қаламга олди? Ёзувчида"),
+        ("нега пайдо бўлди\" Нима учун бевосита ўз замонига юзланмади", "нега пайдо бўлди? Нима учун бевосита ўз замонига юзланмади?"),
+        ("ўйламасдинг Сен", "ўйламасдинг. Сен"),
+        ("деб ўйлайман\"\" деб ёзади", "деб ўйлайман\" деб ёзади"),
+        ("гуноҳи эди. Бироқ, шоир бўлганидан, бу гуноҳ, афтидан, унга юкланган эди\"\"", "гуноҳи эди. Бироқ, шоир бўлганидан, бу гуноҳ, афтидан, унга юкланган эди\""),
+        ("шахси\"\" намоён", "шахси\" намоён"), ("юз тутади\"\",", "юз тутади\"."),
+        ("вужудга келди\", Ўзбек", "вужудга келди\". Ўзбек"), ("тайёрлади\", Ўзбек", "тайёрлади\". Ўзбек"),
+        ("таассурот қолдиради\",", "таассурот қолдиради\"."),
+        ("мурожаат этадилар\", Дарҳақиқат", "мурожаат этадилар\". Дарҳақиқат"),
+        # Kabirov iqtibosi (129-bet)
+        ("“...MEHTA шаҳардаги мана шу бутун масжид-мадрасалар бузилгани ёқади, деб уйлайсизми\") «...» Илож йўқ, билдийизми\"7;",
+         "“...менга шаҳардаги мана шу бутун масжид-мадрасалар бузилгани ёқади, деб ўйлайсизми?! «...» Илож йўқ, билдингизми?!"),
+        ("шундай қилишади\"\" Кўринадики", "шундай қилишади!” Кўринадики"),
+        # Rahim II iqtiboslari (129-bet)
+        ("керак\", Подшоҳнинг", "керак\". Подшоҳнинг"),
+        ("сўйиб ташлаймиз) Бундан буёғи", "сўйиб ташлаймиз! Бундан буёғи"),
+        ("мен ўзим ўйлайман\"\" деб", "мен ўзим ўйлайман!\" деб"),
+        ("кўрган\", Бу шундай", "кўрган\". Бу шундай"), ("эди\", Кейинчалик", "эди\". Кейинчалик"),
+        # muallif nutqi — asarning kulminatsiyasi (130-bet)
+        ("шумиди, халк Кимлар, бошман, деб сенинг бошингга чиқмади) Жиловни",
+         "шумиди, халқ?! Кимлар, бошман, деб сенинг бошингга чиқмади! Жиловни"),
+        ("пайига тушади: Зиндонга ташлайди Бу етмаса", "пайига тушади! Зиндонга ташлайди! Бу етмаса"),
+        ("оч қолдиради Йўлларда", "оч қолдиради! Йўлларда"), ("мажбур қилади.. Хукмдордан", "мажбур қилади!.. Ҳукмдордан"),
+        ("уради, тунайди).. Хаммаси сендан қўркиш", "уради, тунайди!.. Ҳаммаси сендан қўрқиш"),
+        ("қул булиб яшашни талаб килади", "қул бўлиб яшашни талаб қилади!"),
+        ("бечора халк{ Эртанги кунга умидланасан Одил", "бечора халқ! Эртанги кунга умидланасан! Одил"),
+        ("бордир-ку, дейсанГ\"", "бордир-ку, дейсан!\""),
+    ],
+    "Badiiy asardagi absurd va inson konsepsiyasi": [
+        # sahifada «XIX» alohida blok boʻlib turgan, annotatsiya olib tashlangach ajralib qoldi
+        ("asr oxiri va XX asr boshlarida F.Nitshe", "XIX asr oxiri va XX asr boshlarida F.Nitshe"),
+    ],
+    "Şiirin geometrik şekli": [
+        ("http//www. ashtray.ru.", ""),
+    ],
+}
+
+# tozalashdan oldin qoʻllanadigan tuzatishlar (snoska raqami hali olib tashlanmagan matnga)
+QOLDA_OLDIN = {
+    "Oʻtish davri romanlari va inson konsepsiyasi": [
+        ("XX аср ўзбек адабиёти масалалари. Тўплам. – Т:. FAN, 2012. B.40.", ""),
+    ],
+}
+
+
+OCR_SNOSKA = re.compile(r"^(\"|\d)\s*[А-ЯЎҚҒҲ][а-яўқғҳ]+\s+[А-ЯЎҚҒҲ3]\.|^Саъдулло ҚУРОНОВ –")
+
+
+def qolda_tuzat(paragraflar, sarlavha, lugat):
+    tuzatishlar = lugat.get(sarlavha, [])
+    if not tuzatishlar:
+        return paragraflar
+    natija = []
+    for p in paragraflar:
+        if OCR_SNOSKA.match(p):
+            continue
+        for eski, yangi in tuzatishlar:
+            p = p.replace(eski, yangi)
+        if p.strip():
+            natija.append(p)
+    return natija
+
+
+SARLAVHA_QOLDIQ = ("Саъдулло ҚУРОНОВ", "Saʼdullo QURONOV", "Takomil mashaqqatlari",
+                   "Навоий сиймосининг янги талқини", "Navoiy siymosining yangi talqini")
+
+
+def tozalash(paragraflar, til):
+    """Chiqarib olingan abzaclarni tozalaydi: annotatsiya tarjimalari, snoska raqamlari,
+    kolontitullar, soʻz ichidagi boshqa alifbo harflari va notoʻgʻri boʻlingan abzaclar."""
+    # oldindan: sahifa sarlavhasi/osti bloklari va OCR snoskalari (birlashtirishdan OLDIN)
+    from collections import Counter
+    kalta = Counter(p.strip() for p in paragraflar if len(p.strip()) < 70)
+    SAHIFA_OSTI = re.compile(r"^\(?\d[\d ]{1,3}\s*\)?\s*(Sharq yulduzi|Шарқ юлдузи)$|"
+                             r"^(№|N\S{0,3})\s*\d{0,2}\s*20\d\d\s*\(?\d{2,3}\)?$|"
+                             r"^\d{2,3}\)\s*\S+(\s\S+)?$|^UrDU Filologiya fakulteti$|^\d{1,3}$")
+    OSTI_BOSHI = re.compile(r"^(№|N\S{0,3})\s*\d{0,2}\s*20\d\d\s*\(?\d{2,3}\)?\s+")
+    AFFIL = re.compile(r"doktoranti|falsafa doktori|докторанти|фалсафа доктори|universiteti|университети|"
+                       r"professori|профессори|dotsent|доцент|e-mail|quronov@", re.I)
+    oldindan = []
+    for k, p in enumerate(paragraflar):
+        q = OSTI_BOSHI.sub("", p.strip())
+        p = q
+        if not q:
+            continue
+        if k < 4 and len(q) < 220 and AFFIL.search(q) and not re.search(r"[.!?]\s+[A-ZА-ЯЎҚҒҲ][a-zа-яўқғҳ]+\s+[a-zа-яўқғҳ]", q):
+            continue                                   # muallif va ish joyi haqidagi blok
+        # (c) bosh harf alohida blok boʻlib qolgan (drop cap): «Y» + «angi oʻzbek…»
+        if oldindan and len(oldindan[-1].strip()) == 1 and oldindan[-1].strip().isupper() and q[:1].islower():
+            oldindan[-1] = oldindan[-1].strip() + q
+            continue
+        if oldindan and re.fullmatch(r"[IVXL]{2,5}", oldindan[-1].strip()) and q[:1].islower():
+            oldindan[-1] = oldindan[-1].strip() + " " + q
+            continue
+        if re.fullmatch(r"https?://\S+", q):
+            continue                                   # snoskadagi yakka havola
+        if len(q) < 70 and kalta[q] >= 2 and not q.endswith((".", "!", "?", ":", ";", "…")):
+            continue                                   # takrorlangan sahifa sarlavhasi
+        if SAHIFA_OSTI.match(q) or OCR_SNOSKA.match(q):
+            continue
+        oldindan.append(p)
+    paragraflar = oldindan
+
+    natija = []
+    oxirgi_qism = int(len(paragraflar) * 0.85)
+    for i, p in enumerate(paragraflar):
+        p = WORD_HAVOLA.sub("", p)
+        for sarl in SARLAVHA_QOLDIQ:
+            if p.startswith(sarl + " ") and p[len(sarl) + 1:len(sarl) + 2].islower():
+                p = p[len(sarl) + 1:]
+        if til == "xor":
+            p = SAHIFA_KOLONTITUL.sub(" ", p)
+            p = re.sub(r"(?:^|\s)\d{2,3}\s*\|\s*", " ", p)
+            p = re.sub(r"(?<=[.”»])\s\d{1,2}(?=\s[A-ZÇĞİÖŞÜ])", "", p)
+            p = re.sub(r"(?<=[.”»])\s\d{1,2}$", "", p)
+            p = SNOSKA_RAQAM.sub("", p)
+        if til != "xor":
+            # oʻzbekcha maqoladagi ruscha va inglizcha annotatsiyalar saytda kerak emas
+            if RUSCHA_ANNOT.search(p) or INGLIZCHA_ANNOT.match(p):
+                continue
+            if i < oxirgi_qism and len(RUSCHA_HARF.findall(p)) >= 2 and len(p) < 400:
+                continue
+            # matn ichiga tushib qolgan sahifa osti snoskalari (roʻyxat oxiridagilar qoladi)
+            if i < oxirgi_qism and len(p) < 220 and BIBLIO_SNOSKA.search(p):
+                continue
+            p = SNOSKA_RAQAM.sub("", p)
+            # ustunli oʻqishda snoska raqami soʻzdan ajralib qoladi: «“fojia” 1 deya», «koʻzlaydi 1. Biroq»
+            p = re.sub(r"(?<=[”»]) \d{1,2}(?=[\s.,;:])", "", p)
+            p = re.sub(r"(?<=[a-zʻʼа-яўқғҳ]) \d(?=[.,;:]\s)", "", p)
+        # soʻz ichidagi boshqa alifbo harflari (PDF shriftidagi «е», «М» va h.k.)
+        if til == "lat":
+            p = re.sub(r"(?<=[A-Za-zʻʼ])е|е(?=[A-Za-zʻʼ])", "e", p)
+            p = p.replace("М", "M") if re.search(r"[A-Za-z]М|М[a-z]", p) else p
+            p = re.sub(r"\bË", "Yo", p).replace("ë", "yo")
+            p = apostrof(p)                       # o‘ / o' / o’ → oʻ, g‘ → gʻ, ’ → ʼ
+        if til == "kir":
+            p = re.sub(r"(?<=[а-яўқғҳ])a|a(?=[а-яўқғҳ])", "а", p)
+            p = re.sub(r"(?<=[а-яўқғҳ])u(?=[а-яўқғҳ])", "и", p)
+            p = re.sub(r"\bM(?=[а-яўқғҳ])", "М", p)
+        p = re.sub(r"\s+", " ", p)
+        p = re.sub(r"\s+([,.;:!?])", r"\1", p).replace(",,", ",").strip()
+        if not p:
+            continue
+        # abzac sahifa oxirida uzilib qolgan boʻlsa, oldingisiga qoʻshiladi
+        if natija and p[:1].islower():
+            oldingi = natija[-1]
+            # sheʼr: kamida uch qator ketma-ket kalta boʻlsa (misralar alohida qoladi)
+            sheʼr = (len(p) < 70 and len(oldingi) < 70
+                     and (len(natija) < 2 or len(natija[-2]) < 70))
+            # oraga tushib qolgan snoska: undan oldingi abzac davom etadi
+            if (til != "xor" and len(natija) > 1 and len(oldingi) < 220
+                    and BIBLIO_SNOSKA.search(oldingi)):
+                natija.pop()
+                oldingi = natija[-1]
+            if oldingi.endswith("-"):
+                natija[-1] = oldingi[:-1] + p
+                continue
+            ochiq = (not oldingi.endswith((".", "!", "?", ":", ";", "…", ")"))
+                     or bool(re.search(r"(^|\s)[A-ZА-ЯЎҚҒҲ]\.$", oldingi)))
+            qoshtirnoq = oldingi.endswith(("”", "»")) and len(oldingi) > 25
+            if oldingi.endswith(("“...", "“…", "\"...", "«...")):
+                qoshtirnoq = True
+            if not sheʼr and (ochiq or qoshtirnoq):
+                natija[-1] = oldingi + " " + p
+                continue
+        if (natija and len(natija[-1]) > 150 and len(p) > 80
+                and not natija[-1].endswith((".", "!", "?", ":", ";", "…", ")", "»", "”", "]"))
+                and not BIBLIO_SNOSKA.search(natija[-1])):
+            natija[-1] = natija[-1] + " " + p            # satr koʻchishi abzac deb oʻqilgan
+            continue
+        natija.append(p)
+    return natija
 
 
 def main():
@@ -342,8 +608,11 @@ def main():
             print("  bo'sh:", y["fayl"])
             continue
         paragraflar[0] = bosh_tozalash(paragraflar[0])
+        paragraflar = qolda_tuzat(paragraflar, y["sarlavha"], QOLDA_OLDIN)
+        paragraflar = tozalash(paragraflar, y["til"])
+        paragraflar = qolda_tuzat(paragraflar, y["sarlavha"], QOLDA_TUZATISH)
         if y["til"] == "kir":
-            lat = [lotinga(p) for p in paragraflar]
+            lat = [p if RUSCHA_HARF.search(p) else lotinga(p) for p in paragraflar]
             kir = paragraflar
         elif y["til"] == "lat":
             lat = paragraflar
