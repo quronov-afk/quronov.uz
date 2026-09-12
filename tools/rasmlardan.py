@@ -37,7 +37,7 @@ YANGILAR = {
     "f107": "Akademik Naim Karimov va professor Ulugʻbek Hamdam bilan",
     "f108": "Bolalik", "f109": "Erkin Vohidov, Ulugʻbek Hamdam, Isajon Sulton bilan",
     "f110": "Ijodiy uchrashuv", "f111": "Ijodiy uchrashuv", "f112": "Ijodkor yoshlar",
-    "f113": "", "f114": "Imzo marosimi", "f115": "Imzo marosimi",
+    "f113": "Bolalar adabiyoti dargʻalari: Anvar Obidjon, Xudoyberdi Toʻxtaboyev, Tursunboy Adashboyev, bastakor Shermat Yormatov, noshir Sanjar Nazar bilan", "f114": "Imzo marosimi", "f115": "Imzo marosimi",
     "f116": "Kitob taqdimoti", "f117": "Kitob taqdimotida", "f118": "Kursdoshlar",
     "f119": "Professor Qozoqboy Yoʻldosh bilan", "f120": "RTM jamoasi",
     "f121": "Shuhrat Sattorov bilan", "f122": "Umarali Normatov xonadonida",
@@ -69,6 +69,9 @@ YUQORI = ["prezident", "administratsiya", "senator", "vazir", "mirziyoyeva"]
 SAFAR = ["germaniya", "italiya", "berlin", "rim", "bolonya", "florensiya", "muzey",
          "playstation", "futbol", "nihol ekish", "doʻstlar", "qadrdon", "davrasida",
          "tabiat", "muxlis"]
+
+# galereyaga chiqmaydigan suratlar
+OCHIRILGAN = {"f002"}
 
 BOSH = ["f042", "f057"]          # galereya shu ikki suratdan boshlanadi
 DQ_SOCHMA = ["f046", "f001", "f061", "f045"]   # D. Quronovning qolgan suratlari
@@ -129,7 +132,7 @@ def yoyish(royxat, sujet):
 
 def main():
     izoh = izohlar()
-    suratlar = sorted(p.stem for p in FOTO.glob("f*.jpg"))
+    suratlar = sorted(p.stem for p in FOTO.glob("f*.jpg") if p.stem not in OCHIRILGAN)
     yoq = [n for n in suratlar if n not in izoh]
     if yoq:
         print("izohsiz:", ", ".join(yoq))
