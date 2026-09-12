@@ -3,7 +3,7 @@
 Maqsad: saytning inglizcha versiyasi. Yuqori oʻng burchakda til tanlash tugmasi, **asosiy til — oʻzbekcha**.
 Maqolalar professional tarjimon darajasida, bosqichma-bosqich, sekin-asta tarjima qilinadi.
 
-Holat: **boshlanmagan** (reja tasdiqlangan: 2026-09-13).
+Holat: **0-bosqich bajarildi** (2026-09-13); navbatda — 1-bosqich.
 
 ---
 
@@ -30,6 +30,13 @@ Holat: **boshlanmagan** (reja tasdiqlangan: 2026-09-13).
   izohlar `atamalar.json` va uslub qoidalariga qoʻshiladi.
 
 ---
+
+## Texnik tuzilma (0-bosqichda yaratilgan)
+
+- `tools/en.py` — `yasash()` inglizcha sahifalarni `site/en/` ga yozadi; `til_belgilari()` har sahifaga
+  `<!-- til -->` (UZ | EN tugmasi) va `<!-- hreflang -->` bloklarini qoʻyadi. `build.py` oxirida chaqiriladi.
+- Menyuda faqat `site/en/` da mavjud sahifalar koʻrinadi; tarjimasi yoʻq sahifada EN → `/en/`.
+- Interfeys matnlari: `data/en/interfeys.json`. Yangi sahifa qoʻshish — `en.py` ga funksiya + `yasash()` ga qator.
 
 ## Bosqichlar
 
@@ -68,7 +75,7 @@ Har partiyadan keyin: sayt yigʻiladi, tekshiriladi, push qilinadi, bu faylda ho
 
 | Bosqich | Mazmuni | Holat |
 |---|---|---|
-| 0 | Infratuzilma, til tugmasi | kutilmoqda |
+| 0 | Infratuzilma, til tugmasi | bajarildi (2026-09-13) |
 | 1 | Asosiy sahifalar | kutilmoqda |
 | 2 | Biografiyalar | kutilmoqda |
 | 3.1 | S. Quronov: inson konsepsiyasi, roman (≈12) | kutilmoqda |

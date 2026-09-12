@@ -35,9 +35,39 @@ a { color: inherit; text-decoration: none; }
 }
 
 .site-header {
+  position: relative;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
+
+.til-tanlov {
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.til-tanlov a { color: var(--text-secondary); }
+.til-tanlov a:hover { color: var(--text); }
+.til-tanlov .faol { color: var(--text); font-weight: 500; }
+.til-tanlov .ajratgich { color: var(--border); }
+
+.en-tayyorlanmoqda {
+  padding: 36px 0 64px;
+  max-width: 720px;
+  color: var(--text-secondary);
+}
+.en-tayyorlanmoqda a { border-bottom: 1px solid var(--border); color: var(--text); }
 
 .masthead {
   background: #f9f4ec url("img/banner-books.jpg") center / cover no-repeat;

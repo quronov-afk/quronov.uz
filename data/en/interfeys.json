@@ -1,0 +1,20 @@
+{
+  "tagline": "Literature and Literary Studies",
+  "podval": "© 2026 Quronov.uz",
+  "menyu": [
+    {"sahifa": "index.html", "nom": "Home"},
+    {"sahifa": "dilmurod.html", "nom": "Dilmurod Quronov"},
+    {"sahifa": "sadullo.html", "nom": "Sadullo Quronov"},
+    {"sahifa": "kitoblar.html", "nom": "Books (PDF)"},
+    {"sahifa": "galereya.html", "nom": "Gallery"},
+    {"sahifa": "aloqa.html", "nom": "Contact"}
+  ],
+  "bosh_sahifa": {
+    "sarlavha": "Quronov.uz — Literature and Literary Studies",
+    "tavsif": "Articles, books, interviews and scholarly work of the Uzbek literary scholars Dilmurod Quronov and Sadullo Quronov.",
+    "h1": "The scholarly and creative work of the literary scholars Dilmurod Quronov and Sadullo Quronov",
+    "kirish": "Articles, conference papers, lectures, literary works and books in one place.",
+    "tayyorlanmoqda": "The English version of the site is in preparation. Translated articles and pages will be published here step by step; the full collection is currently available in Uzbek.",
+    "ozbekcha_havola": "Go to the Uzbek version →"
+  }
+}
