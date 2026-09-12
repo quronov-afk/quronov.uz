@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Portretdagi musavvir siyrati" data-kir="Портретдаги мусаввир сийрати">Portretdagi musavvir siyrati</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2010 · Sharq yulduzi, 2010, №5 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -97,16 +98,21 @@
 <p>Дарвоқе, бизга ҳамма вақт жиддий-салобатли кўринган устознинг қувлик қилганини Б.Назаровнинг «Ғафур Ғулом олами» рисоласини ўқиш асноси сезиб олгандим. Мақола устида ишларкан, Сувон Мели «Отсиз шум бола», «Меҳр сеҳри» номли теран таҳлилий чиқишларида билдирган фикрларнинг куртакларига кўзим тушди; изланувчан талабаларга тавсия этиш учун қатор масалаларни қайд этиб қўйдим. Буларнинг бари устоз Ғафур Ғуломнинг адабий қиёфасини бор бўйи билан тўлақонли гавдалантира олганидан далолатдир.</p>
 <p>2009 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

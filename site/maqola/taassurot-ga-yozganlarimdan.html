@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="«Taassurot»ga yozganlarimdan" data-kir="«Таассурот»га ёзганларимдан">«Taassurot»ga yozganlarimdan</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2018 · «Nazariy qaydlar» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -85,16 +86,21 @@
 <p>... романни зўр қизиқиш билан, маза қилиб ўқидим. Мутолаа давомида айрим нуқталарга айрича диққат қилганим, хаёлда ёзилажак тақризми ё мақола учун айрим чизгилар тортила бошлагани ҳам бор гап. Рости, асар ҳақида нимадир ёзишни жудаям хоҳлагандим, боз устига, кўп дўстлар ёзишга даъват ҳам қилдилар, лекин ёзолмадим. Неча қайталаб астойдил ёзишга чоғландим ҳам – бўлмади... Шундан бери бунинг сабабини ўйлайман, ўзимча топгандекман ҳам. Ўйласам, асосий сабаб муаллиф кўнгилдан ўтказа олган ҳолларни ўз кўнглимдан ўтказа олмаганим экан. Ахир, Набижон биз танигандан бери қаҳрамони Хай­ём каби йўл излаб келаётган, ҳақ йўлни гоҳ ижтимоий кураш майдонида, гоҳ ислом бағрида, гоҳ эшонлар суҳбатида излаган ва, ниҳоят, ўша «олтин оралиқ» соғинчи билан яшай бошлаган одам. Камина ҳам «олтин оралиқ» маслагига мойил эсам-да, бунга Набижон каби изтиробли изланишлар орқали келган эмас, билмадим, ўзим табиатан шунга мойил бўлсам керак. Айтмоқчиманки, романнинг менга ёққани ҳаммаслаклик туфайли, ёзолмаганим эса ўша туйғуларни кўнгилда яшай олмаганимдан...</p>
 <p>... истагим, мендаги юқорида мазкур ожизликдан мосуво дўстлар роман ҳақида ёзсалар эди, қурғур, асар шунга арзийди-да!</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

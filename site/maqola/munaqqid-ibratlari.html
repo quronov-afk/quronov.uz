@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Munaqqid ibratlari" data-kir="Мунаққид ибратлари">Munaqqid ibratlari</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Taqriz · shaxsiy arxivdan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -59,16 +60,21 @@
 <p>А.Расуловнинг китобларидаги биз юқорида урғулаб кўрсатган жиҳатлар танқид соҳаси кишилари учун ибрат бўларлик. Зеро, улар кўп йиллик изланишлар натижасида танқидчи сифатида муқим бир мавқени эгаллаган, улуғ устозлар сабоқларини ўзлаштириб эндиликда ўзи устоз мақомига етган мунаққидга хос фазилатлардир.</p>
 <p>Олимнинг кўп йиллик илмий-педагогик, адабий танқидий фаолияти маҳсули бўлган асарларнинг Мирзо Улуғбек номидаги Ўзбекистон Миллий университети илмий кенгаши томонидан Давлат мукофотига тавсия этилгани ҳар жиҳатдан асосли деб биламиз. Таниқли адабиётшунос олимнинг Давлат мукофотига тавсия этилиши муаллифнинг заҳматли меҳнатларига берилган адолатли баҳо бўлиб, унда республика ҳукумати, шахсан мамлакатимиз Президентининг илм-фанга юксак эътибори, илм аҳлига кўрсатилаётган ғамхўрликнинг амалдаги натижасини кўриш мумкин.</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

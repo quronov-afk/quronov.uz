@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Mustaqillik davri oʻzbek romanchiligida badiiy ifodaning yangilanishi" data-kir="Мустақиллик даври ўзбек романчилигида бадиий ифоданинг янгиланиши">Mustaqillik davri oʻzbek romanchiligida badiiy ifodaning yangilanishi</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2016 · «Adabiy o&#x27;ylar» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -137,16 +138,21 @@
 <p>2016 йил</p>
 <p>Романнинг янги умри. // Жаҳон адабиёти.- 2001- № 9.- Б. 85.</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

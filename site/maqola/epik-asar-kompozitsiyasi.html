@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Epik asar kompozitsiyasi" data-kir="Эпик асар композицияси">Epik asar kompozitsiyasi</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2018 · «Nazariy qaydlar» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -167,16 +168,21 @@
 <p>Фитрат А. Адабиёт қоидалари // Фитрат А. Танланган асарлар. IV жилд. – Тошкент: Маънавият, 2006. – Б.16. ширишда: «Кўтаринг-а, куёв почча, кўтаринг-а!» – дея қийқирганлар. Зидлаш оқибатида «бу халқ томошаю нари борса муҳокамага қодир, холос, номақбул ишни тўхтатиш, унга қарши туришга ожиз» деган таассуф келиб чиқадики, бу композицион тафаккур маҳсулидир. Зеро, бу фикр айтилган эмас, иккита композицион бўлак зидлаш муносабатида жойлаштирилган, холос: шунинг ўзидан табиий равишда юқоридагича фикр ўсиб чиқади.</p>
 <p>Хулосалаб айтсак, композиция бадиий ижод жараёнининг пировард натижаси – асарнинг бадиий ниятга му­вофиқ ташкилланиши, унинг қисмлари ва унсурларини ижодкор кўзда тутган мазмунни ёрқин ифодалаш ва ўқувчи томонидан айнан шундай тушунилишини таъминлайдиган тарзда бутунликка бириктириш демакдир. Асарнинг қандай қурилгани, қисмлари орасидаги муносабатларни яхши тасаввур қила олиш эса уни тушуниш, таҳлил қилиш ва баҳолаш асоси, демак, малакали филолог-мутахассис бўлиб етишишнинг ҳам муҳим шартидир.</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

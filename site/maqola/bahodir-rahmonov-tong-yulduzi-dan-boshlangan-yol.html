@@ -39,7 +39,8 @@
   </div>
 
   <h1 data-lat="Bahodir Rahmonov. «Tong yulduzi»dan boshlangan yoʻl" data-kir="Баҳодир Раҳмонов. «Тонг юлдузи»дан бошланган йўл">Bahodir Rahmonov. «Tong yulduzi»dan boshlangan yoʻl</h1>
-  <p class="maqola-meta">Olim haqida · muallif: Bahodir Rahmonov · quronov.uz arxividan tiklandi</p>
+  <p class="byline dq" data-lat="Bahodir Rahmonov" data-kir="Баҳодир Раҳмонов">Bahodir Rahmonov</p>
+  <p class="maqola-meta">Olim haqida · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
 <p>Umrni yoʻlga oʻxshatishadi. Demak, tugʻilishdan boshlanadi bu yoʻl. Lekin shunday insonlar borki, boshqalardan farqli oʻlaroq yoʻldan yoʻl axtaradilar, yaʼni ezgulik yoʻlini. Sof qalb va oʻtkir ongu shuuri bilan nihoyat, oʻz ketar yoʻllarini topa biladilar. Ertakdagi kenja botir kabi bir umr bu yoʻldagi mashaqqatlarni yengib boraveradilar. Taqdir deb atalmish bu yoʻldan umrga mazmun topadilar. Olloh bergan qobiliyatni ezgulik sari yoʻnaltira oladilar. Bu mening hamkasb doʻstim, taniqli olim Dilmurod Quronovning hayotidan chiqargan xulosamdir.</p>
@@ -71,16 +72,21 @@
 <p>Олимнинг фаолиятида кўпқирралилик унинг изланувчан, фидоий, жонкуяр, ҳозиржавоб, тилбилгич, кучли назарий билим соҳиби каби фазилат ва қобилиятга эга эканлигидан далолатдир. Истеъдодли олим томонидан чоп этилган Олий ўқув юртларининг филолог талабалари учун “Адабиётшуносликка кириш”, “Адабиёт назарияси асослари” дарсликлари, шунингдек, бир қатор ўқув қўлланмалари, таржималари, публицистик мақолалари ҳам эътирофга лойиқ. Қолаверса, адабиётшуносликнинг келажагини яратиш йўлида илмий тадқиқотчиларга устозлик қилиши, Илмий кенгашларнинг доимий аъзоси сифатида фаолияти юритиши унинг тиниб-тинчимас, илмга садоқат билан умрини бахшида қилган камтарин олим сифатида намоён қилади. Ҳозирда Дилмурод Қуронов 2009 йилда ташкил этилган «Илмий хабарнома – Научный вестник» журналининг бош муҳаррири лавозимида ишлаб келмоқда.</p>
 <p>Афсуски, бу каби серғайрат инсонларнинг барча қирраларини ва қилган ишларини биргина мақолага сиғдириб бўлмайди. Лекин Дилмуроднинг ўзига хос, ҳаттоки намуна қиларлик фазилатларидан бирини айтмаслик асло мумкин эмас, деб биламан. Абдулла Авлоний ёзади: «Ҳаққоният деб ишда тўғрилик, сўзда ростликни айтилур. Инсон бўстони саломатга, гулзори саодатга ҳаққоният йўли ила чиқар. Инсониятнинг илдизи ўлан раҳмдиллик, ҳақшунослик, одиллик каби энг яхши сифатларнинг онаси ҳаққониятдур». Бу иқтибос Дилмурод Қуроновнинг мақоласидан олинди. Мақоланинг номи ҳам «Ишда – тўғрилик, сўзда – ростлик» деб қўйилган. Айтмоқчиманки, бу айнан Дилмуроднинг умр қоидаси, ҳаётдаги шиори, инсон сифатидаги ўзлигидир. Ҳатто менинг қуйидаги хулосам ҳам ўзининг қаламига мансуб Чўлпон ҳақидаги бир мақола якунига ҳамоҳангдир: «У шундай яшаяпти, шундай ўйлаяпти, шундай ижод қилаяпти». Зеро, «Тонг юлдузи»дан бошланган йўлнинг йўлчисига энг муносиб баҳо ҳам шудир.</p>
   </div>
+
+  <p class="imzo" data-lat="Bahodir Rahmonov" data-kir="Баҳодир Раҳмонов">Bahodir Rahmonov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

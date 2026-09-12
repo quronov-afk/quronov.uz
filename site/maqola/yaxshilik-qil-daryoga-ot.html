@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Yaxshilik qil, daryoga ot" data-kir="Яхшилик қил, дарёга от">Yaxshilik qil, daryoga ot</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Taqriz · shaxsiy arxivdan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -53,16 +54,21 @@
 <p>Йигитчиликда, биласиз, “Пул одамнинг жигаридан бўлур!” дея ҳазиллашиб турилади. Тан оламизми ё йўқми, ҳар не ҳазил бўлганида ҳам, бунинг бир чеккаси айни ҳақиқатлигини ҳаммаям кўп борадан ҳис қилиб кўрган чиқади. Энди икки юз бетли сифати дурустгина китобнинг нашр харажатини хомчўт қилиб кўринг, сўнг шу пулнинг ҳаммаси чўнтагимдан чиқиб кетди деб ўйланг-да, буёғини ўзингиз мушоҳада этаверинг. Хуллас, вилоят театрида юбилейнинг асосий тадбири бўладиган кун дўстлар билан барвақтроқ етиб боргандик, хушнуд кайфиятда Баҳодир ака пешвоз чиқди-да, кўришибоқ бизни машинаси томон бошлаб борди ва ҳар биримизга ҳали матбаа бўёғи уфуриб турган китобдан биттаданини тутқазди. Чин дилдан табрикладик, таҳсин айтдик. Баҳодир ака тадбирдан сўнг шошиб кетиб қолмаслигимизни сўраганди, чиқсак, кутиб турган экан: “Ўқийдиган болаларга берасизлар!” дея қўлимизга яна ўнта-ўнтадан китоб тутқазди...</p>
 <p>Ота-буваларимиз кейин ҳам савоби бориб туради деган умидда кўприк солганлар, йўл очганлар, мактабу мадраса қурганлар. Дуо қилинг, Баҳодир ака қилган иш ҳам шулар сирасида саналсин. Зеро, бир юртдош хотирасига эъзоз, адабиётга беғараз меҳри туфайлидангина вақти, кучи ва молини беғараз сарфламоқ жавонмардликдир. Шундай анъаналари ва уларни давом эттиришга қодир одамлари бор юрт иқболи баланд бўлгай, иншаоллоҳ.</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="«Oʻtgan kunlar» tarjimasi: tahlil va tavsiyalar" data-kir="«Ўтган кунлар» таржимаси: таҳлил ва тавсиялар">«Oʻtgan kunlar» tarjimasi: tahlil va tavsiyalar</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2018 · «Nazariy qaydlar» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -101,16 +102,21 @@
 <p>2017 йил</p>
 <p>ТАРЖИМА ҲАҚИДА</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

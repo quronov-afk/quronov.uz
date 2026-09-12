@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Mukammallik yoʻlida" data-kir="Мукаммаллик йўлида">Mukammallik yoʻlida</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2007 · Sharq yulduzi, 2007, №1 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -171,16 +172,21 @@
 <p>Сабабига тушуниш қийин бўлған бу истиҳзога қарши Ҳасанали сукут қилолмади»,– ва, маълумки, боплаб жавобини берди. 1933 йил нашрида кейинги жумладаги «истиҳзога қарши» ўрнига «аччиққа қарши» деб берилган. Сиртдан қа23 раганда, бу ўзгариш фақат такрордан қочиш учундек кўриниши мумкин. Бироқ, бизнингча, сўзнинг ўзгариши Ҳасаналининг руҳий ҳолатига муайян аниқлик киритади. А.Қодирий Ҳомиднинг гапларини гўё Ҳасанали бўлиб «эшитиб кўрди» ва барчага оддий истиҳзо бўлиб кўринган гаплар замирида фарзандидек кўргани Отабекка нисбатан ғайирлик, душманликни сезди. Айни шунинг учун ҳам у «сукут қилолмади» – сукут қилолмас эди.</p>
 <p>Юқоридаги кузатишларимиз, гарчи улар асосан бир боб доирасида олиб борилган бўлса-да, «Ўтган кунлар» матнини сайқаллаш борасидаги иш анча узоқ давом этганини кўрсатади. Абдулла Қодирий нашрдан нашрга матнни бадиий жиҳатдан мукаммаллаштириб, унга муайян ўзгартишлар киритиб борган. Жумладан, 1933 йил нашри олдидан ҳам ёзувчи матнни бир сидра кўздан кечирган, унга зарур таҳрирлар киритган. Агар шуни эътиборга олсак, асос матн сифатида ҳозиргидек 1926 йил нашрини эмас, балки адиб ҳаётлигида амалга оширилган нашрларнинг сўнггиси – 1933 йил нашрини қабул қилиш, бизнингча, тўғрироқ бўлади. Боз устига, романнинг 1926 йил ва 1933 йилги нашрлари қиёсланса, кейингиси асосан бадиий-эстетик нуқтаи назардан таҳрир қилинганига амин бўлиш мумкинки, насиб қилса, бу ҳақда бошқа бир мақолада сўз юритамиз.</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

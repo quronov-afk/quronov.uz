@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Sheʼrxonlik mashqlari" data-kir="Шеърхонлик машқлари">Sheʼrxonlik mashqlari</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2011 · Fargʻona, 2011 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -105,16 +106,21 @@
 <p>Ёзганларимни хулосаламоққа ҳар не уриндим – бўлмади. Аввало, шеъриятнинг сарҳадлари чексиз, чор тарафдан диққатингни тортадиган сатрлар пайдар-пай чиқиб келаверади. Сониян, биз танлаган шакл ҳам шунга мос: учта юлдузчани қўясан-у, янгидан бошлаб кетаверасан... Насиб бўлса, давом қилармиз.</p>
 <p>2011 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

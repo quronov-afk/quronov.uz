@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Dushmanni tanitgan doʻst" data-kir="Душманни танитган дўст">Dushmanni tanitgan doʻst</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2004 · OʻzAS, 2004 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -71,16 +72,21 @@
 <p>Сўзимиз аввалида уста Алим ҳикояси адибнинг давр концепциясини ифодалашда муҳимлигини айтгандик. А.Қодирий ўз давридаги, давр кишиларидаги ўзгаришларни мушоҳада қилиб, ўзининг ақл-идрокию кучига ишонган янгича фикрловчи одам ҳам, эскича фикрловчи одам ҳам номукам8 мал деб билди. Икки ёрти бир бутун демоқчидек, иккисини қадрдон, ҳаммаслак, қисматдош қилди ва охирида иккисини «қўшиннинг олдинги сафи»га қўйди. Яхши маънодаги консерватизм шудир. Зеро, биз ўтган аср адоғида инсонга сиғиниб, инсонларга – фирқага сиғиниб яшаган одамларнинг руҳан синганига, қалблари «болаларини учириб кетган каррук уясидек бўб-бўш» хувиллаб қолганию бу бўшлиқни нафрату норозилик эгаллаганига гувоҳ бўлдик. Уста Алим ҳикоясининг киритилиши гўё шундан башорат, буюк санъаткор дилига ғойибдан солинган ҳақиқатнинг ифодаси эди.</p>
 <p>2004 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Zulfiya merosi: retseptiv muammolar" data-kir="Зулфия мероси: рецептив муаммолар">Zulfiya merosi: retseptiv muammolar</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2015 · Zulfiya ijodining maʼnaviy-maʼrifiy ahamiyati mavzusidagi ilmiy-amaliy anjuman materiallari, Andijon, 2015 yil, 24 aprel · «Nazariy qaydlar» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -79,16 +80,21 @@
 <p>Таржима муаммолари</p>
 <p>«ЎТГАН КУНЛАР» ТАРЖИМАСИ:</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

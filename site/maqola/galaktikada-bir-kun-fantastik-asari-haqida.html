@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="“Galaktikada bir kun” fantastik asari haqida" data-kir="“Галактикада бир кун” фантастик асари ҳақида">“Galaktikada bir kun” fantastik asari haqida</h1>
+  <p class="byline sq" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="maqola-meta">Olim haqida · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -75,16 +76,21 @@
 <p>Хулоса ўрнида шуни айтиш мумкинки, ўзбек адабиётида илмий фантастиканинг ривожига муносиб ҳисса қўшаётган Саъдулла Қуроновнинг “Галактикада бир кун” илмий-фантастик қиссаси ҳар томонлама ўрганиш ва тадқиқ этишга лойиқдир. Бу фантастик асар ёшлар дунёқарашини ўстириш, эзгу қадриятлар руҳида тарбиялаш жиҳатидан аҳамиятлидир. Барчамизнинг онамиз бўлмиш “Ер” сайёрасида тоза турмушни йўлга қўйишимиз учун энг аввало, теварак-атрофга теран назар ташлайлик. Ахлатхоналарда, йўл чеккаларида фаросатсиз кимсалар томонидан ташлаб кетилган, иссиқ кунда бижғиб, қўланса ҳид тарақатаётган жониворларнинг жасадларига бепарволик билан қараб ўтиш ўрнига, ҳашар йўли билан тозалаш-ободонлаштириш ишларини амалга оширишимиз, мақсадга мувофиқ бўларди. Зеро, ҳар биримиз келажак авлодга осмони мусаффо, табиати гўзал муҳитни қолдиришга бурчли эканимизни унутмайлик. Биз ҳам шундагина жиддий хавф-хатарлардан ҳоли бўлган ҳолда умргузаронлик қилишда давом этишимиз мумкин.</p>
 <p>Фантаст адибнинг юқоридаги номи зикр қилинган қиссасида инсон тақдирини фақатгина ўз қўли билан ярата олиши мумкинлиги уқтирилади. Бугунги кун кашфиётлари одамзотни заволи эмас, аксинча иқболи йўлида хизмат қилиши зарурлигини, фантаст адиб чин дилдан истаганини кўришимиз мумкин. Энг муҳими ушбу асарни ўқиш асносида китобхонлар, айниқса ёш китобхонлар орасида астрономия, физика, кимё, математика ва информатика каби фанларга ўзгача меҳр қўйишлари учун замин бўлиши шубҳасиз.</p>
   </div>
+
+  <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

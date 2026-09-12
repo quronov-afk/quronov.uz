@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Qalblarni larzaga solgan xirgoyi" data-kir="Қалбларни ларзага солган хиргойи">Qalblarni larzaga solgan xirgoyi</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2008 · Xurriyat, 2008, 6 fevral · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -141,16 +142,21 @@
 <p>Ўзида полвонларга хос тантилик, шоирларга хос инжалик, дарвешларга хос ғаройиблик, эл-юртига, фарзандга хос беғараз муҳаббатни жам этган ўзбекнинг катта адибидан мерос икки романнинг қайта нашри барчамизга муборак бўлсин...</p>
 <p>2007 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

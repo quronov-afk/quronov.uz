@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Kulgi zimnidagi jiddiyat" data-kir="Кулги зимнидаги жиддият">Kulgi zimnidagi jiddiyat</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2003 · Oʻzbek filologiyasining dolzarb masalalari, Andijon, 2003 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -85,16 +86,21 @@
 <p>Юқорида айтдикки, даврнинг жадидлар танқид қилган деярли барча иллатлари «Шум бола» бадиий воқелигида у ёки бу даражада ўз ифодасини топган. Қиссадаги ҳаёт тасвиридан «ортиқ бу тарзда яшаб бўлмайди, жамият ислоҳ қилиниши керак» деган хулоса келиб чиқадики, бу ҳам жадидлар қарашларига ҳамоҳанг. Ўртадаги фарқ эса, бизнингча, тасвир ракурсида холос: жадидлардан фарқ қилароқ, Ғафур Ғулом меҳнаткаш халқ ҳаётини «ичдан» тасвирлайди. Яъни, адиб бу ҳаётни яшаб ўтган, сиртдан кузатиб билган эмас. Бас, инқилобдан сўнг меҳнаткашлар ҳаётида озми-кўпми ижобий ўзгаришлар кузатилган экан, уларга адибнинг муносабати ижобий бўлмаслиги мумкинми эди?! Ҳозирда бу нав муносабатга, айтайлик, жадидлар муносабатини ёки бугунда шаклланган муносабатни қарама-қарши қўйиш тўғримикан?! Ўша ҳаётни яшаб кўрмаган авлод буларнинг бирини ҳақ, иккинчисини ноҳақ санашга ҳақлими?! Ўтмиш ҳаётини ҳам, ўз вақтидаги унга турлича муносабатларни ҳам ихтиёримиздан ташқаридаги мавжудлик, амалга ошиб бўлган факт сифатида борича, бутунисича қабул қилингани тўғрироқ бўлмайдими?!.. – юқорида айтганимиз андиша шу каби саволлардан туртки олади.</p>
 <p>2003 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

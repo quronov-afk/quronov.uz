@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Gollivud ssenaristlari ham dogʻda qolibdi" data-kir="Голливуд сценаристлари ҳам доғда қолибди">Gollivud ssenaristlari ham dogʻda qolibdi</h1>
+  <p class="byline sq" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="maqola-meta">Taqriz · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -51,16 +52,21 @@
 <p>«Афсонавий кўзгу сири» номли детектив асарни ўқирканман ана шундай ажиб жараёнлардан роҳатландим. Аслида детектив жанрининг мухлиси эмасман. Бироқ, нима фарқи бор, қандай жанрда бўлмасин маҳорат билан ёзилган асар бўлса бўлдида. Аввало шуни айтишим керакки, бу ўта бадиий, фалсафий, маърифий, маънавий… асар эмас. Ўлай агар, асарнинг бу каби жиҳатларига эътибор ҳам қилмадим. Сабаби бу шунчаки детектив эди. Бироқ мени бошқа нарса – асарнинг фавқулодда ўткир сюжети ўзига ром қилди. Аниқроғи, сюжет узувларини заргарона аниқлик билан теришга уринаётган ёзувчининг ҳаракатларини мароқ билан кузата бошладим. Унинг мақсади эса битта эди: ўқувчини қандай бўлмасин асарга ипсиз боғлаб олса, керак бўлса китобдан бошини кўтартирмай ўқитса. Қойил қолганим, у бунга эришди. Мен асарнинг сўнгигача унинг хато қилишини, қартадан қураётган бежирим уйчасининг қулаб тушишини кутардим. Аммо ундай бўлмади. Аксинча, борган сари ўзига бўлган ишончи ортиб борарди. Қанчалар хатарли бўлмасин уйчаси учун жуда мураккаб фигуралардан фойдаланарди… Хуллас асарни бир кунда «Эҳ, у бундай сюжетни қаёқдан топиб олди?», «Кўп кино кўраркан, мана бу, мана бу эпизодлар худди кинодек тасвирланган», «Голливуд сценаристлари ҳам доғда қолибди», «Ҳалигача қотилни сир сақлай олганини қара-я» каби ўйлар билан ўқиб қўйганимни сезмай қолдим. Чиндан ҳам муаллифнинг маҳоратидан завқландим, маза қилдим☺</p>
 <p>P.S. Ёзганларим билан «Афсонавий кўзгу сири» асарини тарғиб қилмоқчи эмасман. Айтганимдек, у ўта бадиий, фалсафий, маърифий, маънавий… асар эмас. Шунчаки яхши детектив.</p>
   </div>
+
+  <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

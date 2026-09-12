@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Ijod masʼuliyati" data-kir="Ижод масъулияти">Ijod masʼuliyati</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2015 · «Talqin imkonlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -93,16 +94,21 @@
 <p>Албатта, танловга жуда кўп омиллар, жумладан, адабиётнинг ҳам таъсири бор. Дейлик, тадбиркор қаршисида танлов имконияти юзага келди: манави ишга сармоя тиксанг ўттиз фоиз фойда кўрасан, бунисига тиксанг – юз фоиз. Фақат кейингисида сағирлар ҳақига озроқ хиёнат бор... Ёки мана бунисига тик – юз эллик фоиз фойда кўрасан, фақат эл манфаатига озгина зид томони бор... Тез бойимоқ тиласанг, бунисига тик – уч юз фоиз фойда кўрасан, фақат ҳамюртларингга оғу тарқатишинг керак... Албатта, адабиёт танловнинг арифметик ё иқтисодий томонига таъсир қилмайди, бироқ унинг маънавий-ахлоқий томонини белгилашга жиддий таъсир қилади. Яъни, агар тадбиркор мавжуд йўллардан кам фойда келтирса ҳам ҳалолини танласа, билингки, бунда бошқа маънавий-ахлоқий омиллар қатори адабиётнинг ҳам хизмати бор. Бу адабиётнинг потенциалидаги инсонни маънан юксалтириш, жамият ҳаётини тозартириш, ижтимоий муносабатларни ислоҳ қилиш, қисқаси – одамни ўзгартириш орқали оламни ўзгартира олиш имконига бир мисол, холос. Ушбу имкон рўёбга чиқиши ва тўла куч билан ишлаши учун эса, юқорида айтдик, китобхонлик даражаси ва маданиятини юксалтириш, адабий таълимни ислоҳ қилиш каби долзарб вазифаларни уддалаш тақозо этилади.</p>
 <p>2015 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Hamid Olimjonni bilamizmi?" data-kir="Ҳамид Олимжонни биламизми?">Hamid Olimjonni bilamizmi?</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2002 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -337,16 +338,21 @@
 <p>Юқорида айтганимиздек, «Муқанна»да бевосита ўзи яратилган пайт – уруш даврининг ижтимоий-сиёсий ҳолатига қаратилган актуал мазмун юзадаёқ қалқиб туради. Бу ҳақда кўп фикр билдирилгани, иккинчи томони, мақсадимизга кирмагани боис бунга тўхталмадик. Аксинча, биз уни фикран олиб ташлаб, асарнинг чуқурроқ қатламларига назар солишга, шу орқали муаллифининг ижод онларидаги руҳиятини тасаввур қилишга, ўй-фикрларини уқиш, ҳис-туйғуларини кўнгилдан кечириб кўришга интилдик. Маълумки, конкрет ижодкор томонидан яратилган асарларнинг бари бир текис яхши, бари ҳам санъат ҳодисаси бўлолмайди. Фақат яратилишига шахсий ёки ростмана шахсийланган ижтимоий дарднинг ҳосиласи бўлмиш маънавий-руҳий эҳтиёж туртки бўлган, чинакам ижодий-руҳий фаолият маҳсули ўлароқ дунёга келган асарларгина санъат ҳодисаси саналиши мумкин. Бундай асарларнинг ҳар бири – ижодкорнинг идеалга (Ҳаққа, ҳақиқатга) яқинлашувидаги тугал бир босқич. Демакки, «Муқанна»ни ёзган Ҳ.Олимжон «Муқанна»гача бўлган Ҳ.Олимжон эмас. Зеро, ўтмиш орқали замонаси ва замонасидаги ўзини англаган Ҳ.Олимжон қарашларини янгидан тизим сифатида бутунлаб олган, энди шунга мос мақом тутиши мумкин бўлган шахсдир. Яъни, энди у «бахт ва шодлик куйчиси» бўлолмайди, аксинча, узоқ ва ўзига яқин ўтмишдан келаётган эрк куйига қўшилиб хиргойи қилиши табиийроқ. «Муқанна» билан Ҳ.Олимжон миллатнинг асл фарзандлари куйлаган эрк куйига жўр бўла олдики, тўла асос билан «Мен элимнинг юрагида яшайман, Эрк деганнинг тилагида яшайман» дейишга ҳақли эди.</p>
 <p>2001 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

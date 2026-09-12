@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Adabiy asar haqida qaydlar" data-kir="Адабий асар ҳақида қайдлар">Adabiy asar haqida qaydlar</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2014 · Ilmiy xabarnoma., 2014., №3 · «Talqin imkonlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -115,16 +116,21 @@
 <p>Хуллас, нутқий жанр ва бадиий коммуникация воситаси сифатида адабий асар нутқий коммуникация бирлиги бўлмиш гап билан кўплаб умумий жиҳатларга эгадир. Буларни яна бир карра эслатишга ҳаракат қилганимиз, адабий асарга нутқий жанр сифатида ёндашганимиз ўша умумий жиҳатларни шунчаки кўрсатиб бериш учун эмас, албатта. Бизнингча, айни ёндашув адабий асар, адабий жараён, адабий асар талқини, адабий-бадиий ижод табиати каби қатор назарий муаммоларни тўғри ҳал қилишга йўналиш, андоза бериши билан аҳамиятлидир.</p>
 <p>2014 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

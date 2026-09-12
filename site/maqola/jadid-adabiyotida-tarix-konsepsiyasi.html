@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Jadid adabiyotida tarix konsepsiyasi" data-kir="Жадид адибиётида тарих концепцияси">Jadid adabiyotida tarix konsepsiyasi</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2002 · Tilshunoslik va adabiyotshunoslik masalalari. Andijon, 2002 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -77,16 +78,21 @@
 <p>Маълумки, Фитрат мазкур асарлар устида ишлаётган палла «мозийга қайтиб иш кўриш хайрли» деб билган бошқа бир буюгимиз – А.Қодирий «Ўтган кунлар» устида иш бошлаган эди. Ва айни шу асар ХХ аср бошларида кузатилган миллий тарихий тафаккуримиздаги ўзгаришларнинг адабиётдаги инъикоси, ўзбек адабиётидаги тарихий-бадиий тафаккур тадрижининг янги бир босқичи сифатида майдонга чиқди. Зеро, унда ўтмиш манзаралари илк бор чинакам конкретлилик касб этди, «боболаримизнинг маиший, сиёсий аҳволи» Беҳбудий орзулаганидек кенг кўламда, «янги тадқиқот ила» бадиий идрок этилди. «Ўтган кунлар»дан кейиноқ дунёга келган «Абулфайзхон» драмаси, бирмунча кейинроқ яратилган «Кеча ва кундуз» романи тарихий-бадиий тафаккуримиз кўтарилган даражани мустаҳкамлади. Шуниси эътиборлики, учала асарда ҳам тарихимизнинг ўта мураккаб, юртнинг истиқболдаги тақдирини белгилайдиган даврлари қаламга олинди. Ҳар учала муаллиф ҳам ўтмишни бадиий идрок этиш орқали замона моҳиятини англаш ва англатишга, юртдошларининг мавжуд воқеликни теранроқ англашлари учун бир «ибрат» яратишга интилдики, бу уларнинг жадид маърифатчиси экани билан изоҳланади.</p>
 <p>2002 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

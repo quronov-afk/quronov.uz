@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Saʼdullo Quronov. Postmodern olamda manzil izlab…" data-kir="Саъдулло Қуронов. Постмодерн оламда манзил излаб…">Saʼdullo Quronov. Postmodern olamda manzil izlab…</h1>
+  <p class="byline sq" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="maqola-meta">Maqola · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -115,16 +116,21 @@
 <p>Ю.Борев. Инсон ва инсоният ҳаётининг олий мақсади ва маъноси//Шарқ юлдузи. 2011 й., №4. Б.160.</p>
 <p>Ю.Борев. Парадигма современной эпохи//http//independent-academy.net/science/library/ideal1.html</p>
   </div>
+
+  <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

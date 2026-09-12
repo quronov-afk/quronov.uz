@@ -131,8 +131,6 @@ PODVAL = """
 
 def meta_qatori(m):
     meta = [m["janr"]]
-    if m.get("yozgan"):
-        meta.append(f"muallif: {m['yozgan']}")
     if m.get("yil"):
         meta.append(str(m["yil"]))
     manba = manba_lotin(m.get("asl_manba"))
@@ -172,6 +170,19 @@ JANR_YORLIQ = {
     "Maqola (ingliz tilida)": "Ingliz tilida",
 }
 
+MUALLIF_NOM = {
+    "Dilmurod Quronov": ("Dilmurod Quronov", "Дилмурод Қуронов"),
+    "Sa'dullo Quronov": ("Saʼdullo Quronov", "Саъдулло Қуронов"),
+}
+
+
+def muallif_ismi(m):
+    """Yozuv ostida turadigan ism. «Olim haqida» bo'lsa — maqolani yozgan kishi."""
+    if m.get("yozgan"):
+        return m["yozgan"], kirillga(m["yozgan"])
+    return MUALLIF_NOM[m.get("muallif", "Dilmurod Quronov")]
+
+
 MUALLIFLAR = {
     "Dilmurod Quronov": ("dilmurod.html", "dq"),
     "Sa'dullo Quronov": ("sadullo.html", "sq"),
@@ -182,6 +193,7 @@ def maqola_sahifasi(m):
     meta = meta_qatori(m)
     muallif = m.get("muallif", "Dilmurod Quronov")
     sahifa, rang = MUALLIFLAR[muallif]
+    ism_lat, ism_kir = muallif_ismi(m)
     dq = ' class="active"' if muallif == "Dilmurod Quronov" else ""
     sq = ' class="active"' if muallif != "Dilmurod Quronov" else ""
     lat = "\n".join(f"<p>{e(p)}</p>" for p in m["matn"])
@@ -199,6 +211,7 @@ def maqola_sahifasi(m):
   </div>
 
   <h1 data-lat="{e(m['title'])}" data-kir="{e(m['title_kir'])}">{e(m['title'])}</h1>
+  <p class="byline {rang}" data-lat="{e(ism_lat)}" data-kir="{e(ism_kir)}">{e(ism_lat)}</p>
   <p class="maqola-meta">{e(' · '.join(meta))}</p>
 
   <div class="matn" id="matn-lat">
@@ -207,16 +220,21 @@ def maqola_sahifasi(m):
   <div class="matn" id="matn-kir" hidden>
 {kir}
   </div>
+
+  <p class="imzo" data-lat="{e(ism_lat)}" data-kir="{e(ism_kir)}">{e(ism_lat)}</p>
 </div>
 
 <script>
 (function () {{
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {{
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {{
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    }});
     tugma.forEach(function (t) {{
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     }});
@@ -247,10 +265,11 @@ def royxat_html(maqolalar, havola_oldi=""):
         meta = meta_qatori(m)
         teg_attr = " ".join(guruhlar(m))
         rang = MUALLIFLAR[m.get("muallif", "Dilmurod Quronov")][1]
+        ism = muallif_ismi(m)[0]
         qismlar.append(f"""      <article class="entry {rang}" data-teg="{e(teg_attr)}">
         <div class="entry-meta">
-          <span class="author-tag">{e(m['janr'])}</span>
-          <span class="entry-date">{e(' · '.join(meta[1:]))}</span>
+          <span class="author-tag">{e(ism)}</span>
+          <span class="entry-date">{e(' · '.join(meta))}</span>
         </div>
         <h3><a href="{havola_oldi}maqola/{m['slug']}.html">{e(m['title'])}</a></h3>
         <p>{e(qisqacha(m))}</p>

@@ -39,7 +39,8 @@
   </div>
 
   <h1 data-lat="Qozoqboy Yoʻldosh. Uygʻunlik" data-kir="Қозоқбой Йўлдош. Уйғунлик">Qozoqboy Yoʻldosh. Uygʻunlik</h1>
-  <p class="maqola-meta">Olim haqida · muallif: Qozoqboy Yoʻldosh · quronov.uz arxividan tiklandi</p>
+  <p class="byline dq" data-lat="Qozoqboy Yoʻldosh" data-kir="Қозоқбой Йўлдош">Qozoqboy Yoʻldosh</p>
+  <p class="maqola-meta">Olim haqida · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
 <p>Dunyo tamadduniga nazar tashlansa, chinakam Shaxsni tarbiyalab, voyaga yetkazishda hamisha maʼlum kemtikliklar boʻlgan. Shu oʻrinda jamoaviy oʻyin — gʻalabaga kafolat qoidasi esa nainki sportda, balki adabiyotshunoslikda ham bir qadar koʻrinib qoldi.</p>
@@ -67,16 +68,21 @@
 <p>Мен ҳам Дилмурод билан кўп баҳслашаман. Чунки уни кўп ўқийман, кўп таъсирланаман, кўп нарса ўрганаман. Табиийки, айрим ҳолларда ўзгача фикрда ҳам бўламан ва ўз қарашларимга таяниб, унинг фикрларига муносабат билдираман. Ишонаманки, у шахсим билан эмас, қарашларим билан баҳс қилади ва ҳақ йўл сари оғишмай юраверади.</p>
 <p>Барчага-барча томони маълум бўлган қари очуннинг ҳеч ким кўрмаган қирраларини кўриш ва кўрсата билиш санъати бўлмиш бадиий адабиёт ҳақидаги оригинал ва асосли илмий қарашлари билан миллат бадиий-эстетик тафаккури ривожига сезиларли таъсир кўрсатган улкан олимни қутлуғ ёши билан муборакбод этиб, унинг илмий изланишлари ва шахсий ҳаётида яна кўпдан-кўп ютуқлар бўлишини тилаймиз. Ўзида педагоглик, назариётчилик, синчилик, ўгирмачилик, ноширлик, ўйчиллик сингари сифатларни уйғунлаштирган Дилмурод Қуроновга илмий-ижодий юксалишлар ёр бўлсин!</p>
   </div>
+
+  <p class="imzo" data-lat="Qozoqboy Yoʻldosh" data-kir="Қозоқбой Йўлдош">Qozoqboy Yoʻldosh</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

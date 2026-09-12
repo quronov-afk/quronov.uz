@@ -230,6 +230,8 @@ def lotinga(s):
 
 def kirillga(s):
     """Lotin yozuvidagi kitob uchun: teskari o'girish (taxminiy)."""
+    # uch harfli birikmalar oldin tekshiriladi: «yoʻl» → «йўл» («ёʻл» emas)
+    uchliklar = [("yoʻ", "йў"), ("yo‘", "йў"), ("ygʻ", "йғ"), ("yg‘", "йғ")]
     juftlar = [("oʻ", "ў"), ("o‘", "ў"), ("gʻ", "ғ"), ("g‘", "ғ"), ("ch", "ч"),
                ("sh", "ш"), ("ts", "ц"), ("ya", "я"), ("yo", "ё"), ("yu", "ю"),
                ("ye", "е")]
@@ -239,6 +241,12 @@ def kirillga(s):
              "x": "х", "y": "й", "z": "з", "ʼ": "ъ", "’": "ъ"}
     out, i = [], 0
     while i < len(s):
+        uchta = s[i:i + 3]
+        mos3 = next((c for lat, c in uchliklar if uchta.lower() == lat), None)
+        if mos3:
+            out.append(mos3[0].upper() + mos3[1:] if s[i].isupper() else mos3)
+            i += 3
+            continue
         uch = s[i:i + 2]
         mos = next((c for lat, c in juftlar if uch.lower() == lat), None)
         if mos:

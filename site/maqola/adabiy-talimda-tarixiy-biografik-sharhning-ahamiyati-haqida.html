@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Adabiy taʼlimda tarixiy-biografik sharhning ahamiyati haqida" data-kir="Адабий таълимда тарихий-биографик шарҳнинг аҳамияти ҳақида">Adabiy taʼlimda tarixiy-biografik sharhning ahamiyati haqida</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2011 · ADU. Ilmiy xabarnoma 2011 №4 · «Talqin imkonlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -95,16 +96,21 @@
 <p>Юқоридагича талқин, албатта, ягона ҳисоблана олмайди. “Қаландар ишқи”ни тарихий-биографик ва қисман миллий адабий анъаналар контекстида тушунишга интилганимиз, моҳиятан, шоир ёзган пайтида ғазалга юклаган мазмунни тушунишга ҳаракатдир. Иккинчи томондан, “Қаландар ишқи” каби рамзий-метафорик ифода йўсинига қурилган ғазаллар ўзида аввалбошдан икки турли талқин имкони билан яралади. Яъни бундай асарларда тасвирланган нарса (тасвир плани)дан бевосита ўсиб чиқувчи маъно ҳам, контекст(лар)да намоён бўлувчи тагмаъно ҳам мустақил, бир-бирига халал бермаган ҳолда яшайверади. Демак, ғазал мазмунининг турлича тушунилиши табиий ва қонуний ҳолдир. Шунақа экан, “Қаландар ишқи” айни юқорида биз талқин қилган мазмунда тушунилиши лозим деган даъводан сақланмоқ керак. Фикримизча, шу ҳолни назарда тутган ҳолда ғазални ўрганишда аввал бевосита мазмуни етказилгани, яъни унинг ўқувчилар билан ишқий мавзудаги асар сифатида муҳокама қилингани мақсадга мувофиқдир. Шундан кейингина ғазални тарихий-биографик контекстда таҳлил ва талқин қилиб берилса, бизнингча, ўқувчиларнинг адабиёт ҳақидаги, бадиий ижод табиати, бадиий асар мазмунининг серқирралиги ҳақидаги тасаввурларини бойитиш имкони юзага келади. Бундай имконлардан самарали фойдаланиш эса адабий таълимдан кўзланувчи мақсадга эришишда ғоят муҳимдир.</p>
 <p>2011 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

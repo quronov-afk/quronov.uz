@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="«Kunduzsiz kechalar» haqida" data-kir="«Кундузсиз кечалар» ҳақида">«Kunduzsiz kechalar» haqida</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2013 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -145,16 +146,21 @@
 <p>***</p>
 <p>... юбилей деганлари кўп яхши нарса. Лекин ёзганларим юбилейбоп гаплар деб тушунилмаса яхши эди. Тўғри, юбилей баҳона ўн икки йил нарида олган таассуротни тиклашга уринганим бор гап. Зеро, ўшанда туйқус ёмби олмос топгандек эдим... Юбилейлар бор бўлсин, бугун олтмишвойлар сафига қўшилган Усмон Азим олмосга яна сайқал берсину Чўлпон таваллудининг навбатдаги катта тўйларида унинг жилоларидан баҳраманд бўлиш сизу бизга насиб этсин.</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

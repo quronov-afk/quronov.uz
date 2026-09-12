@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Saʼdullo Quronov haqida" data-kir="Саъдулло Қуронов ҳақида">Saʼdullo Quronov haqida</h1>
+  <p class="byline sq" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="maqola-meta">Biografiya · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -95,16 +96,21 @@
 <p>Jajji jamgʻarma. Bolalar uchun. – Toshkent: Akademnashr, 2020.</p>
 <p>Bolalar uchun yuridik ensiklopediya – Toshkent: “Adolat” milliy huquqiy axborot markazi, 2021.</p>
   </div>
+
+  <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

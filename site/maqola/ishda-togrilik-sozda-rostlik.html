@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="“Ishda - toʻgʻrilik, soʻzda – rostlik" data-kir="“Ишда - тўғрилик, сўзда – ростлик">“Ishda - toʻgʻrilik, soʻzda – rostlik</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2016 · «Adabiy o&#x27;ylar» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -97,16 +98,21 @@
 <p>Хуллас, эндиликда адабиёт нимагадир восита бўлиб эмас, ўз ҳолича – адабиёт ўлароқ яшаётир. Айни ҳолни эътиборга олмасдан, бугунги адабиётга ҳам адабиёт ҳақида илгари ҳосил қилган тасаввурлар билан ёндашмоқдамиз. Ҳолбуки, объектнинг табиати ўзгарган экан, ёндашувимизга ҳам муайян ўзгаришлар киритилиши лозим. Муаммонинг яна бир ўткир қирраси шуки, ёш авлодга адабиётни ўқитишимиз ҳам кўпроқ ўша эскирган тасаввурларга таянади. Айтмоқчиманки, ҳозир адабий ижодда, адабиётни англаш ва ўқитишда янгиланиш жараёнлари кечаётган паллада, бошқача айтсак, ўтиш давридамиз. Ҳар қандай ўтиш давридаги каби бунда ҳам зиддиятлар, чалғишлар, йўқотишлар бўлиши табиий. Бироқ пировард натижада жамият адабиётни асл қимматига муносиб қадрлайди, жавобан эса у миллатни маънавий юксалтиришдек вазифасини уддалашда самарали ва бардавом бўлади.</p>
 <p>2016 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

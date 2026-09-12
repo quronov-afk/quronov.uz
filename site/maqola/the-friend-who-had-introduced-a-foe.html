@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="The Friend Who Had Introduced a Foe" data-kir="Тҳе Фриенд Wҳо Ҳад Интродуcед а Фое">The Friend Who Had Introduced a Foe</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola (ingliz tilida) · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -447,16 +448,21 @@
 <p>оф а трутҳ, а мессаге инпуттед инто греат артистъс минд бй тҳе дивине провиденcе.</p>
 <p>Дилмурод Куронов. (2004). Тҳе Фриенд Wҳо Ҳад Интродуcед а Фое.</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

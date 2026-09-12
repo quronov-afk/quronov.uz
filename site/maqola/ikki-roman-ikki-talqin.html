@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Ikki roman – ikki talqin" data-kir="Икки роман – икки талқин">Ikki roman – ikki talqin</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 1991 · Yoshlik, 1991, № 6, B.28-32 · jurnal skaneridan oʻqildidan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -103,16 +104,21 @@
 <p>Абдишукур тутган йўл бирнав тўғридай. Аммо эътибор берилса, «кўзи очилмаган» бойлар унинг гапларини жиддий қабул қилмаётгани, устига-устак уни мазахлаётганлари сезилади. Бунинг боиси эса биринчидан, Абдишукурнинг қарашларида изчиллик етишмаслиги ҳам унинг ғоясида собит эмаслиги, иккинчидан, шахс сифатида ожизлиги. У ўзининг қарашларини қуйидагича ифодалайди: «Каминанинг ғоявий ҳаёти шундай, яна такрорлайман: миллий сармояни ўз бойларимиз — мусулмон бойларимиз тўла эгалласинлар, яъни бутун Туркистонимизда тижорат ўз бойларимиз қўлида бўлсин, бу билан қаноатланмай, завод-фабрикалар қурсинлар, Масковга, Варшавага ва ҳоказо шаҳарларга ўзлари мол олиб борсинлар, у ерлардан ўзлари мол келтирсинлар, дейман. Ўртадаги шу яҳудий, ўрис савдогарларининг думини қисиб қўйиш керак, дейман».</p>
 <p>Бир қарашда Абдишукур билан Ш. Хўжаев ягона мақсадга интилаётгандай, лекин аслида ундай эмас. Ш. Хўжаевнинг миллий сармоя ҳақидаги гаплари ҳам, маърифатпарварлик борасидаги гаплари ҳам бир мақсадга — мустамлака зулмидан қутулиб мустақил давлат қуришга бўйсундирилган. Абдишукур эса бойлар билан бирга подшога омонлик тилайди,</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

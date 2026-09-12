@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Bezavol haqiqatlar" data-kir="Безавол ҳақиқатлар">Bezavol haqiqatlar</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2009 · Tafakkur., 2009, №4 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -133,16 +134,21 @@
 <p>... машҳур филолог олим А.Потебня маърузаларида адабиётнинг, бадиий образнинг моҳиятини соддароқ йўсинда тушунтириш учун масални танлаган. У айтадики, масалнинг мўъжаз воқеаси ҳаётда биз дуч келадиган муаммоларнинг соддагина ечими экан. Ногоҳ шоҳид бўлганимиз бир неча дақиқалик ҳаётий ҳолат баҳона шунча гапни тўкдикки, олим ҳаққа ўхшайди. Менга қолса, бошқа китоблар қатори Эзоп масаллари ҳам ҳар кимнинг иш столида турсин деган бўлардим.</p>
 <p>2008 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

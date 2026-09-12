@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Zavqimdan bir shingil" data-kir="Завқимдан бир шингил">Zavqimdan bir shingil</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2012 · Sharq yulduzi jurnali 2012, № 6 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -83,16 +84,21 @@
 <p>Аҳмад Аъзам янги китоби муқовасига «Кўп ишни қилиб кўрдим, турли юмушга қўл урдим. Лекин ҳеч бири ёзишга, ёзиш берадиган машаққатли завққа тенг келмайди...» деган изҳорини ёздириб қўйибди. Ҳақиқатан ҳам, китобга ёзувчи, назаримизда, адабий жараёндан бироз четлашиб қолгандек, «турли юмушга қўл уриб» юрган вақтлари ёзилган асарлар киритилибди. Муаллиф «ёзиш берадиган завқ» ҳақида айтибди, илло, ўқиш берадиган завқ ҳам бундан кам эмас. Шуни ўйлаб, китобга кирган асарларнинг айримларига, шунда ҳам мухтасар тўхталдим – ўқиб оладиган завқингиз ўзингизники бўлсин, дедим-да.</p>
 <p>2012 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

@@ -305,6 +305,26 @@ a { color: inherit; text-decoration: none; }
   margin: 26px 0 10px;
 }
 
+.byline {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  margin: 0 0 10px;
+}
+
+.byline.dq { color: var(--dilmurod); }
+.byline.sq { color: var(--sadullo); }
+
+.imzo {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  text-align: right;
+  margin: 32px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
 .maqola-meta {
   font-family: var(--sans);
   font-size: 13px;

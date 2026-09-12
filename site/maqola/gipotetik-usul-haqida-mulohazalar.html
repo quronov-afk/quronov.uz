@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="“Gipotetik usul” haqida mulohazalar" data-kir="“Гипотетик усул” ҳақида мулоҳазалар">“Gipotetik usul” haqida mulohazalar</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 2015 · Nizomiy n. TDPU Ilmiy axborotlari, 2015, №3 · «Talqin imkonlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -109,16 +110,21 @@
 <p>“Ҳамид Олимжонни биламизми?” номли мақолам чоп қилинганидан бери ҳам мана ўн икки йилдан ошди. (Дарвоқе, шоир ижоди билан озми-кўп шуғулланганки одамга мақола номи эриш туюлган, балки, бироз малол келган бўлса ҳам мумкин. Рости, журнални қўлга олибоқ кўнгилда шунинг андишасини туйганман. Негаки, бу номни журналдаги дўстлар қўйганлар, биласиз, матбуот шунга ўхшаш “сенсация”ли номларни хушлайди, камина уни “Тарих сабоқлари” деб номла40 гандим.). Ўтган вақт давомида “Муқанна” талқини хусусида эшитганим фикр-қарашлар турли-туман, ҳатто бир-бирига мутлақо зид: “Кашфиёт-ку!” дея алқаганлар ҳам, “Сохталаштириш-ку!” дея ёзғирганлар ҳам бўлди. Эшитганда иккала томон ҳам оғмаслик – ҳовлиқиб ҳам кетмаслик, руҳни ҳам чўктирмаслик ҳаракатида бўлдим. Энди, баҳс руҳидан фориғ бўлиб, масалага совуққон нигоҳ билан қараркан, камина амалга оширган талқин тарихий-биографик ва ижодий-руҳий асосларга эга деган фикримда қатъийлашаман. Шундай экан, “Муқанна”га ёндашувимизни “гипотетик” деб ҳисоблаш ҳам у қадар тўғри эмас, зеро, бизнинг талқинни инкор қилувчилар ҳам айни шу асосларга таянмоқда.</p>
 <p>2015 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

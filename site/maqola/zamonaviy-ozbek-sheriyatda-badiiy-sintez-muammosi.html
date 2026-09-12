@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Zamonaviy oʻzbek sheʼriyatda badiiy sintez muammosi" data-kir="Замонавий ўзбек шеъриятда бадиий синтез муаммоси">Zamonaviy oʻzbek sheʼriyatda badiiy sintez muammosi</h1>
+  <p class="byline sq" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="maqola-meta">Maqola · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -97,16 +98,21 @@
 <p>Abu Nasr Forobiy. Fozil odamlar shahri. – Т.: Ozbekiston Milliy Ensiklopediyasi, 2004. Б.42.</p>
 <p>Б. Рўзимуҳаммад. Чўлпон -тонг юлдузи демак. Т.: Ўқитувчи, 1997. 69-б.</p>
   </div>
+
+  <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

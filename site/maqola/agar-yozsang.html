@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="“Agar yozsang...”" data-kir="“Агар ёзсанг...”">“Agar yozsang...”</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">So&#x27;z boshi · 2010 · quronov.narod.ru arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -57,16 +58,21 @@
 <p>Шу гапларни ёзяпман-у, ич-ичимда бир эътироз кучайиб бормоқда: “Хе-й, шеърни шарҳлашга нима бор... ахир, шеърдаги ҳисларни ўзга йўсинда суратлантириш мумкин бўлганида, шоир шеър ёзиб ўтирармиди, нодон”. Наилож, ёзиш истаги нечоғли кучли бўлса-да, бу эътирозга жўяли жавоб топишга ожизлигимни ҳам тан олишга мажбурман. Шу боис гапни мухтасар қилиб, шеър мухлисларига ҳали матбаа иси кетмаган “Юрак билан сўзлашув” тўпламини илиниб қоламан...</p>
 <p>Дарвоқе, шу кунларда элликни қоралаётган шоир дилида “Юрак билан сўзлашув” эҳтиёжи тобора кучайиб бораётганини айтишни фаромуш қилибман. Тўпламнинг охиридан ўрин олган “Қайтиш” номли шеърни ўқиб кўринг-а, ўзингиз ҳам бунга амин бўласиз. Демак, етуклик палласига кирган шоирдан самимий ҳисларга йўғрилган гўзал шеърлар кутиб қолишга асосимиз бор...</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

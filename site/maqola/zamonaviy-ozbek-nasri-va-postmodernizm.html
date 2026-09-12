@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="Zamonaviy oʻzbek nasri va postmodernizm" data-kir="Замонавий ўзбек насри ва постмодернизм">Zamonaviy oʻzbek nasri va postmodernizm</h1>
+  <p class="byline sq" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="maqola-meta">Maqola · quronov.uz arxividan tiklandi</p>
 
   <div class="matn" id="matn-lat">
@@ -65,16 +66,21 @@
 <p>ни сақлаб қолаверади. Шу боис ҳам уларда оламни англаш йўлида инсон иродасидан ташқаридаги Кучнинг бевосита ифодаси, инсонни дунё чархпалагининг оддий, аммо</p>
 <p>си сифатида тасвирлашга бўлган ҳаракат мавжуд. Аммо биз уни Ғарбда шаклланган постмодернизм нуқтаи назаридан тушунишга ҳаракат қилсак, модернизмга бўлган муносабат айнан қайтарилиши мумкин. Шу сабабдан ҳозирги кун адабиётини тадқиқ этаётганда дунёда содир бўлаётган ўзгаришлар ва постмодерн санъатининг муайян таъсирини инкор этмай, бу йўналишни</p>
   </div>
+
+  <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });

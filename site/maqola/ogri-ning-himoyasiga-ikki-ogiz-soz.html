@@ -39,6 +39,7 @@
   </div>
 
   <h1 data-lat="«Oʻgʻri»ning himoyasiga ikki ogʻiz soʻz" data-kir="«Ўғри»нинг ҳимоясига икки оғиз сўз">«Oʻgʻri»ning himoyasiga ikki ogʻiz soʻz</h1>
+  <p class="byline dq" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
   <p class="maqola-meta">Maqola · 1995 · Vatan, 1995 · «Mutolaa va idrok mashqlari» toʻplamidan</p>
 
   <div class="matn" id="matn-lat">
@@ -67,16 +68,21 @@
 <p>Юқоридаги мулоҳазаларга таянган ҳолда А.Қаҳҳорнинг «Ўғри» ҳикояси баркамол бадиийлик намунаси эканини яна бир карра таъкидлаб айтишга ўзимизда журъат сезамиз. Бунга амин бўлиш учун «Ўғри»ни талқин қилишда унинг ўзига хос поэтик хусусиятларини эътиборда тутиш, воқеликдан келиб чиқиб ҳикояга эмас, ҳикоядан келиб чиқиб воқеликка муносабат билдиришимиз талаб қилинади, холос. Зеро, аксинча йўл тутсак, асарга ёндашишда вульгар социологик мавқедан нари ўтмаган бўлиб чиқамиз.</p>
 <p>1995 йил</p>
   </div>
+
+  <p class="imzo" data-lat="Dilmurod Quronov" data-kir="Дилмурод Қуронов">Dilmurod Quronov</p>
 </div>
 
 <script>
 (function () {
   var tugma = document.querySelectorAll('.yozuv-tanlov button');
-  var sarlavha = document.querySelector('h1[data-lat]');
+  var ikkiyozuv = document.querySelectorAll('[data-lat]');
   function qoy(y) {
     document.getElementById('matn-lat').hidden = (y === 'kir');
     document.getElementById('matn-kir').hidden = (y !== 'kir');
-    sarlavha.textContent = sarlavha.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    ikkiyozuv.forEach(function (el) {
+      var qiymat = el.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+      if (qiymat) el.textContent = qiymat;
+    });
     tugma.forEach(function (t) {
       t.classList.toggle('tanlangan', t.dataset.yozuv === y);
     });
