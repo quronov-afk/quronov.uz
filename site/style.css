@@ -247,7 +247,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .avatar.dq { background: var(--dilmurod-bg); color: var(--dilmurod); }
-img.avatar { object-fit: cover; object-position: center 20%; background: var(--surface); }
+img.avatar { object-fit: cover; background: var(--surface); }
 .avatar.sq { background: var(--sadullo-bg); color: var(--sadullo); }
 
 .author-head h1 { font-size: 32px; font-weight: 400; margin: 0 0 4px; }

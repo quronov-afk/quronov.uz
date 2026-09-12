@@ -18,3 +18,6 @@ data/baner-variantlar/
 *.tif
 *.tmp
 ~$*
+
+# Avatar manba suratlari (kesilgan nusxalar site/img/ ichida)
+avatar/
