@@ -105,6 +105,13 @@ YOZUVLAR = [
      "manba": "Ilmiy xabarnoma (ADU), 2015, № 4",
      "boshi": "ЧЎЛПОН ШЕЪРИЯТИДА БАДИИЙ ОБРАЗНИНГ ВИЗУАЛЛАШУВИ", "oxiri": "Адабиётлар"},
 
+    # skanerdan oʻqilganlar (matn qatlami yoʻq, tesseract bilan tanilgan)
+    {"fayl": "4. Минг бир қиёфа романи.pdf", "ocr": True, "bet": 3, "bet_oxiri": 8,
+     "til": "kir", "janr": "Maqola", "yil": 2023,
+     "sarlavha": "«Ming bir qiyofa» romanida erkin inson gʻoyasi",
+     "manba": "«Sharq yulduzi» jurnali, 2023, № 10",
+     "boshi": "XIX аср охири ва ХХ аср бошларида"},
+
     {"fayl": "Sharq yulduzi # 1-2015.pdf", "til": "kir", "janr": "Maqola", "yil": 2015,
      "sarlavha": "Oybek lirikasida badiiy sintez",
      "manba": "«Sharq yulduzi» jurnali, 2015, № 1",
@@ -156,6 +163,37 @@ def eski_shrift(matn, nom):
     """cp1251 baytlari latin-1 sifatida oʻqilgan matnni tiklaydi."""
     tiklangan = matn.encode("latin-1", "replace").decode("cp1251", "replace")
     return tiklangan.translate(str.maketrans(SHRIFTLAR[nom]))
+
+
+OCR_KESH = ROOT / "Sa'dullo Quronov" / "ocr"
+
+
+def ocr_matn(fayl, boshi=1, oxiri=None):
+    """Skaner qilingan PDF: sahifalarni rasmga oʻgirib, tesseract bilan oʻqiydi.
+
+    Sahifa chetidagi qora hoshiya tesseractni adashtirgani uchun kesib tashlanadi.
+    """
+    from PIL import Image
+    kesh = OCR_KESH / fayl.stem
+    kesh.mkdir(parents=True, exist_ok=True)
+    natija = kesh / "matn.txt"
+    if natija.exists():
+        return natija.read_text(encoding="utf-8")
+    bet = [str(boshi)] + (["-l", str(oxiri)] if oxiri else [])
+    subprocess.run(["pdftoppm", "-r", "300", "-gray", "-jpeg", "-f", str(boshi)]
+                   + (["-l", str(oxiri)] if oxiri else [])
+                   + [str(fayl), str(kesh / "s")], capture_output=True)
+    bolaklar = []
+    for rasm in sorted(kesh.glob("s-*.jpg")):
+        im = Image.open(rasm)
+        w, h = im.size
+        im.crop((int(w * .03), int(h * .02), int(w * .97), int(h * .98))).save(rasm, quality=92)
+        r = subprocess.run(["tesseract", str(rasm), "stdout", "-l", "uzb_cyrl"],
+                           capture_output=True)
+        bolaklar.append(r.stdout.decode("utf-8", "replace"))
+    matn = "\n".join(bolaklar)
+    natija.write_text(matn, encoding="utf-8")
+    return matn
 
 
 def xom_matn(fayl):
@@ -234,7 +272,8 @@ def abzaclar(matn, satr_abzac=False):
 def bosh_tozalash(p):
     """Birinchi abzacdagi sarlavha–muallif qoldiqlarini kesadi."""
     sozlar = p.split()
-    while sozlar and (sozlar[0].isupper() and len(sozlar[0]) > 1
+    rim = re.compile(r"^[IVXLC]+$")              # «XIX аср» dagi rim raqami matnga tegishli
+    while sozlar and (sozlar[0].isupper() and len(sozlar[0]) > 1 and not rim.match(sozlar[0])
                       or sozlar[0] in {"S.D.", "С.Д.", "Annotatsiya:", "Аннотация:"}):
         sozlar.pop(0)
     if sozlar[:1] in (["Quronov"], ["Қуронов"], ["Quronov,"]):
@@ -249,7 +288,8 @@ def main():
         if not fayl.exists():
             print("  yo'q:", y["fayl"])
             continue
-        matn = xom_matn(fayl)
+        matn = ocr_matn(fayl, y.get("bet", 1), y.get("bet_oxiri")) if y.get("ocr") \
+            else xom_matn(fayl)
         if y.get("shrift"):
             matn = eski_shrift(matn, y["shrift"])
         matn = kesish(matn, y["boshi"], y.get("oxiri"))
