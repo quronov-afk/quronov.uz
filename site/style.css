@@ -425,7 +425,13 @@ img.avatar { object-fit: cover; background: var(--surface); }
   display: block;
   background: var(--surface);
 }
-.foto figcaption { padding-top: 12px; font-size: 16px; line-height: 1.5; }
+.foto figcaption {
+  padding-top: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  min-height: 3.4em;
+}
 .foto figcaption span { display: block; font-family: var(--sans); font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 .galereya-menyu { margin-bottom: 8px; }
 .galereya[hidden] { display: none; }
