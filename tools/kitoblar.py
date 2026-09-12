@@ -9,7 +9,7 @@ import json, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build import SHAPKA, PODVAL, e
+from build import SHAPKA, PODVAL, e, meta_teglar
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -134,7 +134,11 @@ def sahifa(kitoblar):
     tugmalar = chr(10).join(tugmalar)
     bolimlar = (chr(10) * 2).join(bolimlar)
 
-    return SHAPKA.format(title="Kitoblar PDF — Quronov.uz", yol="", dq="", sq="") + f"""
+    meta_html = meta_teglar("Kitoblar PDF — Quronov.uz",
+                            "Dilmurod Quronov va Saʼdullo Quronov kitoblarini PDF shaklida oʻqish "
+                            "va yuklab olish.", "kitoblar.html")
+    return SHAPKA.format(title="Kitoblar PDF — Quronov.uz", yol="", dq="", sq="",
+                         meta=meta_html) + f"""
 <div class="wrap">
   <section class="intro">
     <h1>Kitoblar PDF</h1>

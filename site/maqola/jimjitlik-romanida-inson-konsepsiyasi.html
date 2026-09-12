@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>«Jimjitlik» romanida inson konsepsiyasi — Quronov.uz</title>
+<meta name="description" content="Saʼdullo Quronov. S.Quronov , filologiya fanlari bo‘yicha falsafa doktori (PhD), Andijon davlat universiteti doktoranti. Annotatsiya: Maqolada “Jimjitlik” romani inson…">
+<link rel="canonical" href="https://quronov.uz/maqola/jimjitlik-romanida-inson-konsepsiyasi.html">
+<meta property="og:site_name" content="Quronov.uz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="«Jimjitlik» romanida inson konsepsiyasi">
+<meta property="og:description" content="Saʼdullo Quronov. S.Quronov , filologiya fanlari bo‘yicha falsafa doktori (PhD), Andijon davlat universiteti doktoranti. Annotatsiya: Maqolada “Jimjitlik” romani inson…">
+<meta property="og:url" content="https://quronov.uz/maqola/jimjitlik-romanida-inson-konsepsiyasi.html">
+<meta property="og:image" content="https://quronov.uz/img/sadullo.jpg">
+<meta property="og:locale" content="uz_UZ">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -97,6 +107,19 @@
 
   <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="oqilgan" data-kalit="jimjitlik-romanida-inson-konsepsiyasi" hidden></p>
+  <aside class="iqtibos">
+    <p class="iqtibos-sarlavha">Iqtibos keltirish uchun</p>
+    <p class="iqtibos-matn" id="iqtibos-matn">Quronov S. «Jimjitlik» romanida inson konsepsiyasi // Chingiz Aytmatov va jahon adabiyoti xalqaro ilmiy-amaliy konferensiya. Fargʻona, 2023. – URL: https://quronov.uz/maqola/jimjitlik-romanida-inson-konsepsiyasi.html (murojaat sanasi: 13.09.2026)</p>
+    <button type="button" class="iqtibos-tugma" id="iqtibos-tugma">Nusxa olish</button>
+  </aside>
+  <nav class="mavzudosh" aria-label="Mavzudosh maqolalar">
+    <p class="mavzudosh-sarlavha">Mavzudosh maqolalar</p>
+    <ul>
+      <li><a href="lolazor-romanida-inson-konsepsiyasi.html">«Lolazor» romanida inson konsepsiyasi</a><span>Saʼdullo Quronov · 2023</span></li>
+      <li><a href="badiiy-asardagi-absurd-va-inson-konsepsiyasi.html">Badiiy asardagi absurd va inson konsepsiyasi</a><span>Saʼdullo Quronov · 2023</span></li>
+      <li><a href="ulugbek-hamdamning-muvozanat-konsepsiyasi.html">Ulugʻbek Hamdamning muvozanat konsepsiyasi</a><span>Saʼdullo Quronov · 2023</span></li>
+    </ul>
+  </nav>
 </div>
 
 <script>
@@ -119,6 +142,18 @@
     t.addEventListener('click', function () { qoy(t.dataset.yozuv); });
   });
   try { if (localStorage.getItem('yozuv') === 'kir') qoy('kir'); } catch (x) {}
+  var tugma2 = document.getElementById('iqtibos-tugma');
+  var iqtibos = document.getElementById('iqtibos-matn');
+  if (tugma2 && iqtibos) {
+    var bugun = new Date();
+    var sana = ('0' + bugun.getDate()).slice(-2) + '.' + ('0' + (bugun.getMonth() + 1)).slice(-2) + '.' + bugun.getFullYear();
+    iqtibos.textContent = iqtibos.textContent.replace(/murojaat sanasi: [0-9.]+/, 'murojaat sanasi: ' + sana);
+    tugma2.addEventListener('click', function () {
+      var tayyor = function () { tugma2.textContent = 'Nusxa olindi'; setTimeout(function () { tugma2.textContent = 'Nusxa olish'; }, 2000); };
+      if (navigator.clipboard) navigator.clipboard.writeText(iqtibos.textContent).then(tayyor);
+      else { var r = document.createRange(); r.selectNodeContents(iqtibos); var t = window.getSelection(); t.removeAllRanges(); t.addRange(r); document.execCommand('copy'); tayyor(); }
+    });
+  }
 })();
 </script>
 <script src="../oqilgan.js" defer></script>

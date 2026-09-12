@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The concept of a historical man in the novel “Alisher Navoi” — Quronov.uz</title>
+<meta name="description" content="Saʼdullo Quronov. The article examines the concept of a historical personality in the novels of Oybek “Navoi’ and Isajon Sultan “Alisher Navoi” from the point of view of…">
+<link rel="canonical" href="https://quronov.uz/maqola/the-concept-of-a-historical-man-in-the-novel-alisher-navoi.html">
+<meta property="og:site_name" content="Quronov.uz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The concept of a historical man in the novel “Alisher Navoi”">
+<meta property="og:description" content="Saʼdullo Quronov. The article examines the concept of a historical personality in the novels of Oybek “Navoi’ and Isajon Sultan “Alisher Navoi” from the point of view of…">
+<meta property="og:url" content="https://quronov.uz/maqola/the-concept-of-a-historical-man-in-the-novel-alisher-navoi.html">
+<meta property="og:image" content="https://quronov.uz/img/sadullo.jpg">
+<meta property="og:locale" content="uz_UZ">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -151,6 +161,19 @@
 
   <p class="imzo" data-lat="Saʼdullo Quronov" data-kir="Саъдулло Қуронов">Saʼdullo Quronov</p>
   <p class="oqilgan" data-kalit="the-concept-of-a-historical-man-in-the-novel-alisher-navoi" hidden></p>
+  <aside class="iqtibos">
+    <p class="iqtibos-sarlavha">Iqtibos keltirish uchun</p>
+    <p class="iqtibos-matn" id="iqtibos-matn">Quronov S. The concept of a historical man in the novel “Alisher Navoi” // The American Journal of Social Science and Education Innovations, 2021, 3(10). – URL: https://quronov.uz/maqola/the-concept-of-a-historical-man-in-the-novel-alisher-navoi.html (murojaat sanasi: 13.09.2026)</p>
+    <button type="button" class="iqtibos-tugma" id="iqtibos-tugma">Nusxa olish</button>
+  </aside>
+  <nav class="mavzudosh" aria-label="Mavzudosh maqolalar">
+    <p class="mavzudosh-sarlavha">Mavzudosh maqolalar</p>
+    <ul>
+      <li><a href="time-of-transition-in-uzbekistan-and-the-concept-of-personal.html">Time of transition in Uzbekistan and the concept of personality</a><span>Saʼdullo Quronov · 2023</span></li>
+      <li><a href="the-friend-who-had-introduced-a-foe.html">The Friend Who Had Introduced a Foe</a><span>Dilmurod Quronov</span></li>
+      <li><a href="importance-of-literal-synthesis-in-the-oriental-classic-literature.html">Importance of literal synthesis in the oriental classic literature</a><span>Saʼdullo Quronov</span></li>
+    </ul>
+  </nav>
 </div>
 
 <script>
@@ -173,6 +196,18 @@
     t.addEventListener('click', function () { qoy(t.dataset.yozuv); });
   });
   try { if (localStorage.getItem('yozuv') === 'kir') qoy('kir'); } catch (x) {}
+  var tugma2 = document.getElementById('iqtibos-tugma');
+  var iqtibos = document.getElementById('iqtibos-matn');
+  if (tugma2 && iqtibos) {
+    var bugun = new Date();
+    var sana = ('0' + bugun.getDate()).slice(-2) + '.' + ('0' + (bugun.getMonth() + 1)).slice(-2) + '.' + bugun.getFullYear();
+    iqtibos.textContent = iqtibos.textContent.replace(/murojaat sanasi: [0-9.]+/, 'murojaat sanasi: ' + sana);
+    tugma2.addEventListener('click', function () {
+      var tayyor = function () { tugma2.textContent = 'Nusxa olindi'; setTimeout(function () { tugma2.textContent = 'Nusxa olish'; }, 2000); };
+      if (navigator.clipboard) navigator.clipboard.writeText(iqtibos.textContent).then(tayyor);
+      else { var r = document.createRange(); r.selectNodeContents(iqtibos); var t = window.getSelection(); t.removeAllRanges(); t.addRange(r); document.execCommand('copy'); tayyor(); }
+    });
+  }
 })();
 </script>
 <script src="../oqilgan.js" defer></script>

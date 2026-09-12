@@ -90,6 +90,11 @@
 
   if (qidiruv) {
     qidiruv.addEventListener('input', function () { joriy = 1; chizish(); });
+    qidiruv.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' && qidiruv.value.trim()) {
+        location.href = 'qidiruv.html?q=' + encodeURIComponent(qidiruv.value.trim());
+      }
+    });
   }
 
   chizish();

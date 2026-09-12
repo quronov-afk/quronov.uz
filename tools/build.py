@@ -91,7 +91,7 @@ SHAPKA = """<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+{meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{yol}style.css">
@@ -115,6 +115,27 @@ SHAPKA = """<!DOCTYPE html>
   </div>
 </header>
 """
+
+SAYT = "https://quronov.uz"
+
+
+def meta_teglar(sarlavha, tavsif, yol, rasm="img/ulashish.jpg", tur="website"):
+    """Google tavsifi, kanonik havola va Telegram/Facebook uchun Open Graph kartasi."""
+    tavsif = re.sub(r"\s+", " ", tavsif).strip()
+    if len(tavsif) > 180:
+        tavsif = tavsif[:177].rsplit(" ", 1)[0] + "…"
+    url = f"{SAYT}/{yol}"
+    return (f'<meta name="description" content="{e(tavsif)}">\n'
+            f'<link rel="canonical" href="{e(url)}">\n'
+            f'<meta property="og:site_name" content="Quronov.uz">\n'
+            f'<meta property="og:type" content="{tur}">\n'
+            f'<meta property="og:title" content="{e(sarlavha)}">\n'
+            f'<meta property="og:description" content="{e(tavsif)}">\n'
+            f'<meta property="og:url" content="{e(url)}">\n'
+            f'<meta property="og:image" content="{SAYT}/{rasm}">\n'
+            f'<meta property="og:locale" content="uz_UZ">\n'
+            f'<meta name="twitter:card" content="summary_large_image">\n')
+
 
 PODVAL = """
 <footer class="site-footer">
@@ -191,6 +212,93 @@ def tagsarlavha_html(m):
             f"{e(t)}</p>")
 
 
+def qisqa_ism(toliq):
+    """«Saʼdullo Quronov» → «Quronov S.» (bibliografik shakl)."""
+    qism = toliq.replace("Sa'dullo", "Saʼdullo").split()
+    if len(qism) < 2:
+        return toliq
+    return f"{qism[-1]} {qism[0][0]}."
+
+
+def iqtibos_matni(m, ism_lat):
+    from datetime import date
+    bolaklar = [f"{qisqa_ism(ism_lat)} {m['title']}"]
+    manba = manba_lotin(m.get("asl_manba"))
+    if manba:
+        bolaklar.append(f" // {manba}")
+    elif m.get("kitob"):
+        bolaklar.append(f" // {m['kitob']}")
+    if m.get("yil") and str(m["yil"]) not in (manba or ""):
+        bolaklar.append(f". – {m['yil']}")
+    url = f"{SAYT}/maqola/{m['slug']}.html"
+    return "".join(bolaklar) + f". – URL: {url} (murojaat sanasi: {date.today():%d.%m.%Y})"
+
+
+def iqtibos_html(m, ism_lat):
+    """Maqola oxiridagi «Iqtibos keltirish uchun» bloki (nusxa olish tugmasi bilan)."""
+    return f"""  <aside class="iqtibos">
+    <p class="iqtibos-sarlavha">Iqtibos keltirish uchun</p>
+    <p class="iqtibos-matn" id="iqtibos-matn">{e(iqtibos_matni(m, ism_lat))}</p>
+    <button type="button" class="iqtibos-tugma" id="iqtibos-tugma">Nusxa olish</button>
+  </aside>"""
+
+
+def mavzudosh_html(m):
+    royxat = m.get("mavzudosh") or []
+    if not royxat:
+        return ""
+    qatorlar = "\n".join(
+        f'      <li><a href="{x["slug"]}.html">{e(x["title"])}</a>'
+        f'<span>{e(x["ism"])}{" · " + str(x["yil"]) if x.get("yil") else ""}</span></li>'
+        for x in royxat)
+    return f"""  <nav class="mavzudosh" aria-label="Mavzudosh maqolalar">
+    <p class="mavzudosh-sarlavha">Mavzudosh maqolalar</p>
+    <ul>
+{qatorlar}
+    </ul>
+  </nav>"""
+
+
+def mavzudoshlarni_topish(maqolalar, soni=3):
+    """Matn soʻzlari boʻyicha (TF-IDF, kosinus) eng yaqin maqolalarni topadi."""
+    import math
+    from collections import Counter
+    def tokenlar(m):
+        matn = (m["title"] + " ") * 3 + " ".join(m["matn"])
+        sozlar = re.findall(r"[a-zʻʼ]{5,}", matn.lower().replace("ʻ", "").replace("ʼ", ""))
+        return Counter(w[:6] for w in sozlar)
+    hujjatlar = [tokenlar(m) for m in maqolalar]
+    df = Counter(w for h in hujjatlar for w in h)
+    n = len(maqolalar)
+    vektorlar = []
+    for h in hujjatlar:
+        v = {w: (1 + math.log(c)) * math.log(n / df[w]) for w, c in h.items()
+             if 1 < df[w] < n * 0.4}
+        norma = math.sqrt(sum(x * x for x in v.values())) or 1
+        vektorlar.append({w: x / norma for w, x in v.items()})
+    for i, m in enumerate(maqolalar):
+        if m["janr"] == "Biografiya":
+            m["mavzudosh"] = []
+            continue
+        ballar = []
+        for j, boshqa in enumerate(maqolalar):
+            if i == j or boshqa["janr"] == "Biografiya":
+                continue
+            a, b2 = vektorlar[i], vektorlar[j]
+            if len(a) > len(b2):
+                a, b2 = b2, a
+            ball = sum(x * b2.get(w, 0) for w, x in a.items())
+            if ball > 0.9:            # deyarli bir xil matn — tavsiya qilinmaydi
+                continue
+            if boshqa.get("muallif") == m.get("muallif"):
+                ball *= 1.15
+            ballar.append((ball, j))
+        ballar.sort(reverse=True)
+        m["mavzudosh"] = [{"slug": maqolalar[j]["slug"], "title": maqolalar[j]["title"],
+                           "ism": muallif_ismi(maqolalar[j])[0], "yil": maqolalar[j].get("yil")}
+                          for ball, j in ballar[:soni] if ball > 0.05]
+
+
 def maqola_sahifasi(m):
     meta = meta_qatori(m)
     muallif = m.get("muallif", "Dilmurod Quronov")
@@ -201,7 +309,11 @@ def maqola_sahifasi(m):
     lat = "\n".join(f"<p>{e(p)}</p>" for p in m["matn"])
     kir = "\n".join(f"<p>{e(p)}</p>" for p in m["matn_kir"])
 
-    return SHAPKA.format(title=e(m["title"]) + " — Quronov.uz", yol="../", dq=dq, sq=sq) + f"""
+    rasm = "img/dilmurod.jpg" if muallif == "Dilmurod Quronov" else "img/sadullo.jpg"
+    meta_html = meta_teglar(m["title"], f"{ism_lat}. " + qisqacha(m, 200),
+                            f"maqola/{m['slug']}.html", rasm, "article")
+    return SHAPKA.format(title=e(m["title"]) + " — Quronov.uz", yol="../", dq=dq, sq=sq,
+                         meta=meta_html) + f"""
 <div class="wrap maqola {rang}">
   <div class="maqola-top">
     <a class="ortga" href="../{sahifa}">← {e(m.get("muallif", "Dilmurod Quronov")).replace("Sa'dullo", "Saʼdullo")}</a>
@@ -225,6 +337,8 @@ def maqola_sahifasi(m):
 
   <p class="imzo" data-lat="{e(ism_lat)}" data-kir="{e(ism_kir)}">{e(ism_lat)}</p>
   <p class="oqilgan" data-kalit="{e(m['slug'])}" hidden></p>
+{iqtibos_html(m, ism_lat)}
+{mavzudosh_html(m)}
 </div>
 
 <script>
@@ -247,6 +361,18 @@ def maqola_sahifasi(m):
     t.addEventListener('click', function () {{ qoy(t.dataset.yozuv); }});
   }});
   try {{ if (localStorage.getItem('yozuv') === 'kir') qoy('kir'); }} catch (x) {{}}
+  var tugma2 = document.getElementById('iqtibos-tugma');
+  var iqtibos = document.getElementById('iqtibos-matn');
+  if (tugma2 && iqtibos) {{
+    var bugun = new Date();
+    var sana = ('0' + bugun.getDate()).slice(-2) + '.' + ('0' + (bugun.getMonth() + 1)).slice(-2) + '.' + bugun.getFullYear();
+    iqtibos.textContent = iqtibos.textContent.replace(/murojaat sanasi: [0-9.]+/, 'murojaat sanasi: ' + sana);
+    tugma2.addEventListener('click', function () {{
+      var tayyor = function () {{ tugma2.textContent = 'Nusxa olindi'; setTimeout(function () {{ tugma2.textContent = 'Nusxa olish'; }}, 2000); }};
+      if (navigator.clipboard) navigator.clipboard.writeText(iqtibos.textContent).then(tayyor);
+      else {{ var r = document.createRange(); r.selectNodeContents(iqtibos); var t = window.getSelection(); t.removeAllRanges(); t.addRange(r); document.execCommand('copy'); tayyor(); }}
+    }});
+  }}
 }})();
 </script>
 <script src="../oqilgan.js" defer></script>
@@ -391,7 +517,11 @@ def galereya_sahifasi():
     else:
         foto_blok = '  <div id="foto" style="display:none"></div>'
 
-    return SHAPKA.format(title="Galereya — Quronov.uz", yol="", dq="", sq="") + f"""
+    meta_html = meta_teglar("Galereya — Quronov.uz",
+                            "Dilmurod Quronov va Saʼdullo Quronov ishtirokidagi videolar va suratlar.",
+                            "galereya.html")
+    return SHAPKA.format(title="Galereya — Quronov.uz", yol="", dq="", sq="",
+                         meta=meta_html) + f"""
 <div class="wrap">
   <section class="intro">
     <h1>Galereya</h1>
@@ -426,6 +556,55 @@ def galereya_sahifasi():
 """ + PODVAL
 
 
+def qidiruv_yasash(maqolalar):
+    """Butun matn boʻyicha qidiruv: site/qidiruv.json indeksi va site/qidiruv.html sahifasi."""
+    indeks = [{"s": m["slug"], "t": m["title"], "a": muallif_ismi(m)[0], "y": m.get("yil") or "",
+               "j": m["janr"], "m": re.sub(r"\s+", " ", " ".join(m["matn"]))}
+              for m in maqolalar]
+    (SITE / "qidiruv.json").write_text(json.dumps(indeks, ensure_ascii=False, separators=(",", ":")),
+                                       encoding="utf-8")
+    meta_html = meta_teglar("Qidiruv — Quronov.uz",
+                            "Dilmurod Quronov va Saʼdullo Quronov maqolalari matni boʻyicha qidiruv.",
+                            "qidiruv.html")
+    sahifa = SHAPKA.format(title="Qidiruv — Quronov.uz", yol="", dq="", sq="", meta=meta_html) + """
+<div class="wrap">
+  <section class="intro">
+    <h1>Qidiruv</h1>
+  </section>
+  <form class="qidiruv-forma" id="qidiruv-forma" role="search">
+    <input type="search" id="qidiruv-soz" class="search" placeholder="Maqolalar matni boʻyicha qidirish"
+           autocomplete="off" aria-label="Qidiruv soʻzi">
+    <button type="submit">Qidirish</button>
+  </form>
+  <p class="qidiruv-holat" id="qidiruv-holat"></p>
+  <div id="qidiruv-natija"></div>
+  <nav class="sahifalar" id="qidiruv-sahifalar" aria-label="Sahifalar"></nav>
+</div>
+<script src="qidiruv.js" defer></script>
+""" + PODVAL
+    (SITE / "qidiruv.html").write_text(sahifa, encoding="utf-8")
+    return len(json.dumps(indeks, ensure_ascii=False)) // 1024
+
+
+def sitemap_yasash():
+    """Google uchun sahifalar xaritasi va robots.txt."""
+    from datetime import date
+    bugun = date.today().isoformat()
+    sahifalar = sorted(p.relative_to(SITE).as_posix() for p in SITE.rglob("*.html"))
+    ustuvor = {"index.html": "1.0", "dilmurod.html": "0.9", "sadullo.html": "0.9"}
+    qatorlar = ['<?xml version="1.0" encoding="UTF-8"?>',
+                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for yol in sahifalar:
+        url = f"{SAYT}/" if yol == "index.html" else f"{SAYT}/{yol}"
+        qatorlar.append(f"  <url><loc>{e(url)}</loc><lastmod>{bugun}</lastmod>"
+                        f"<priority>{ustuvor.get(yol, '0.6')}</priority></url>")
+    qatorlar.append("</urlset>")
+    (SITE / "sitemap.xml").write_text("\n".join(qatorlar) + "\n", encoding="utf-8")
+    (SITE / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SAYT}/sitemap.xml\n",
+                                     encoding="utf-8")
+    return len(sahifalar)
+
+
 def havolalarni_tekshirish():
     """Sayt ichidagi havolalarni tekshiradi: yo'q fayl yoki bo'sh menyu havolasi."""
     xatolar = []
@@ -454,6 +633,7 @@ def main():
         m["teglar"] = teglar(m)
     maqolalar.sort(key=lambda m: (-(m["yil"] or 0), m["title"]))
 
+    mavzudoshlarni_topish(maqolalar)
     MAQOLA_DIR.mkdir(parents=True, exist_ok=True)
     for eski in MAQOLA_DIR.glob("*.html"):
         eski.unlink()
@@ -481,6 +661,8 @@ def main():
         (SITE / "galereya.html").write_text(sahifa, encoding="utf-8")
 
     print(f"{len(maqolalar)} ta maqola sahifasi yasaldi")
+    print(f"qidiruv.json: {qidiruv_yasash(maqolalar)} KB")
+    print(f"sitemap.xml: {sitemap_yasash()} ta sahifa")
 
     xatolar = havolalarni_tekshirish()
     if xatolar:
