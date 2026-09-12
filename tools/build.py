@@ -340,7 +340,7 @@ def eski_saytdan_qoshish(maqolalar, fayl_nomi="eski_maqolalar.json"):
 
 
 def galereya_sahifasi():
-    """Arxivdan tiklangan videolar sahifasi."""
+    """Video va foto galereya: yuqorida ikkita boʻlim tugmasi."""
     fayl = ROOT / "data" / "videolar.json"
     if not fayl.exists():
         return None
@@ -354,17 +354,49 @@ def galereya_sahifasi():
         </div>
         <figcaption>{e(v['nom'])}<span>{e(v['manba'])}</span></figcaption>
       </figure>""")
-    ichki = "\n".join(kartalar)
+    video_ichki = "\n".join(kartalar)
+
+    rasm_fayl = ROOT / "data" / "rasmlar.json"
+    rasmlar = json.loads(rasm_fayl.read_text(encoding="utf-8")) if rasm_fayl.exists() else []
+    if rasmlar:
+        foto_ichki = "\n".join(f"""      <figure class="foto">
+        <img src="{e(r['fayl'])}" alt="{e(r.get('nom', ''))}" loading="lazy">
+        <figcaption>{e(r.get('nom', ''))}<span>{e(r.get('manba', ''))}</span></figcaption>
+      </figure>""" for r in rasmlar)
+        foto_blok = f'  <div class="galereya" id="foto" hidden>\n{foto_ichki}\n  </div>'
+    else:
+        foto_blok = '  <div id="foto" hidden></div>'
+
     return SHAPKA.format(title="Galereya — Quronov.uz", yol="", dq="", sq="") + f"""
 <div class="wrap">
   <section class="intro">
     <h1>Galereya</h1>
   </section>
 
-  <div class="galereya">
-{ichki}
+  <div class="filter-bar galereya-menyu">
+    <a class="tag active" href="#" data-bolim="video">Video galereya</a>
+    <a class="tag" href="#" data-bolim="foto">Foto galereya</a>
   </div>
+
+  <div class="galereya" id="video">
+{video_ichki}
+  </div>
+{foto_blok}
 </div>
+
+<script>
+(function () {{
+  var tugma = document.querySelectorAll('.galereya-menyu .tag');
+  tugma.forEach(function (t) {{
+    t.addEventListener('click', function (ev) {{
+      ev.preventDefault();
+      tugma.forEach(function (x) {{ x.classList.toggle('active', x === t); }});
+      document.getElementById('video').hidden = t.dataset.bolim !== 'video';
+      document.getElementById('foto').hidden = t.dataset.bolim !== 'foto';
+    }});
+  }});
+}})();
+</script>
 """ + PODVAL
 
 

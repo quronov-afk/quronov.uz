@@ -33,7 +33,12 @@
     <h1>Galereya</h1>
   </section>
 
-  <div class="galereya">
+  <div class="filter-bar galereya-menyu">
+    <a class="tag active" href="#" data-bolim="video">Video galereya</a>
+    <a class="tag" href="#" data-bolim="foto">Foto galereya</a>
+  </div>
+
+  <div class="galereya" id="video">
       <figure class="video">
         <div class="video-ramka">
           <iframe src="https://www.youtube-nocookie.com/embed/rlOH7YVet0E" title="Ona tilini oʻqitishdagi yondashuv haqida"
@@ -62,8 +67,58 @@
         </div>
         <figcaption>«Jajji akademik» jurnali haqida<span>Saʼdullo Quronov</span></figcaption>
       </figure>
+      <figure class="video">
+        <div class="video-ramka">
+          <iframe src="https://www.youtube-nocookie.com/embed/yiFNC1BRD3Y" title="Dilmurod Quronov «Zamondosh» koʻrsatuvi mehmoni"
+                  loading="lazy" allowfullscreen></iframe>
+        </div>
+        <figcaption>Dilmurod Quronov «Zamondosh» koʻrsatuvi mehmoni<span>«Zamondosh» koʻrsatuvi</span></figcaption>
+      </figure>
+      <figure class="video">
+        <div class="video-ramka">
+          <iframe src="https://www.youtube-nocookie.com/embed/L6YPg0xfLpo" title="Adabiyot oralab: Dilmurod Quronov haqida"
+                  loading="lazy" allowfullscreen></iframe>
+        </div>
+        <figcaption>Adabiyot oralab: Dilmurod Quronov haqida<span>«Adabiyot oralab» koʻrsatuvi</span></figcaption>
+      </figure>
+      <figure class="video">
+        <div class="video-ramka">
+          <iframe src="https://www.youtube-nocookie.com/embed/KZLiIMlQ_Oc" title="Dilmurod Quronovning doktorlik dissertatsiyasi himoyasi"
+                  loading="lazy" allowfullscreen></iframe>
+        </div>
+        <figcaption>Dilmurod Quronovning doktorlik dissertatsiyasi himoyasi<span>1998-yil</span></figcaption>
+      </figure>
+      <figure class="video">
+        <div class="video-ramka">
+          <iframe src="https://www.youtube-nocookie.com/embed/aggu4V0IvAI" title="Prezident bilan muloqotdan"
+                  loading="lazy" allowfullscreen></iframe>
+        </div>
+        <figcaption>Prezident bilan muloqotdan<span>Video yozuv</span></figcaption>
+      </figure>
+      <figure class="video">
+        <div class="video-ramka">
+          <iframe src="https://www.youtube-nocookie.com/embed/PVGnKYjV7Is" title="Oʻzbek bolalar adabiyoti muammolari haqida suhbat"
+                  loading="lazy" allowfullscreen></iframe>
+        </div>
+        <figcaption>Oʻzbek bolalar adabiyoti muammolari haqida suhbat<span>«Daryo» nashri</span></figcaption>
+      </figure>
   </div>
+  <div id="foto" hidden></div>
 </div>
+
+<script>
+(function () {
+  var tugma = document.querySelectorAll('.galereya-menyu .tag');
+  tugma.forEach(function (t) {
+    t.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      tugma.forEach(function (x) { x.classList.toggle('active', x === t); });
+      document.getElementById('video').hidden = t.dataset.bolim !== 'video';
+      document.getElementById('foto').hidden = t.dataset.bolim !== 'foto';
+    });
+  });
+})();
+</script>
 
 <footer class="site-footer">
   <div class="footer-inner">
