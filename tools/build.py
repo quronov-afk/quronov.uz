@@ -138,8 +138,6 @@ def meta_qatori(m):
         meta.append(manba)
     if m.get("kitob"):
         meta.append(f"«{m['kitob']}» toʻplamidan")
-    elif m.get("manba_sayt"):
-        meta.append(m["manba_sayt"] + "dan tiklandi")
     return meta
 
 
@@ -361,7 +359,6 @@ def galereya_sahifasi():
 <div class="wrap">
   <section class="intro">
     <h1>Galereya</h1>
-    <p>Eski quronov.uz saytining video boʻlimidan tiklangan yozuvlar.</p>
   </section>
 
   <div class="galereya">
