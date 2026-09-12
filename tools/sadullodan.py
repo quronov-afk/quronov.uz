@@ -105,6 +105,11 @@ YOZUVLAR = [
      "manba": "Ilmiy xabarnoma (ADU), 2015, № 4",
      "boshi": "ЧЎЛПОН ШЕЪРИЯТИДА БАДИИЙ ОБРАЗНИНГ ВИЗУАЛЛАШУВИ", "oxiri": "Адабиётлар"},
 
+    {"fayl": "Sharq yulduzi # 1-2015.pdf", "til": "kir", "janr": "Maqola", "yil": 2015,
+     "sarlavha": "Oybek lirikasida badiiy sintez",
+     "manba": "«Sharq yulduzi» jurnali, 2015, № 1",
+     "boshi": "Тил универсал фикрлаш ва ифодалаш"},
+
     {"fayl": "Тафаккур-Suhbat.pdf", "til": "kir", "janr": "Suhbat", "yil": None,
      "sarlavha": "Takomil mashaqqatlari. Ulugʻbek Hamdam bilan suhbat",
      "manba": "«Tafakkur» jurnali", "boshi": "– Улуғбек ака"},
@@ -134,6 +139,23 @@ AXLAT = re.compile(
     r"|^(Илмий хабарнома|Ilmiy xabarnoma|Scientific Bulletin|ADABIY MEROS"
     r"|TANQID VA TAHLIL|LITERARY|ADABIYOTSHUNOSLIK|АДАБИЁТШУНОСЛИК|ТАРИХ|TARIX"
     r"|ISSN|ISNN|УДК|UDK|UO‘K|DOI|www\.|E-mail|Тел|Volume|Web)", re.I)
+
+# izoh (snoska) satrlari: «Шу асар. Б. 79.», «Ўша манба. Б. 12.»
+SNOSKA = re.compile(r"^(Шу асар|Ўша асар|Ўша манба|Shu asar|O‘sha asar)\b")
+
+
+# eski oʻzbek shriftlari: pdftotext bergan belgilarni kirillga qaytarish jadvali
+SHRIFTLAR = {
+    "sharq2010": {"і": "ҳ", "І": "Ҳ", "ї": "қ", "Ї": "Қ",
+                  "є": "ў", "Є": "Ў", "ў": "ғ", "Ў": "Ғ"},
+    "jahon": {"µ": "ҳ", "Μ": "Ҳ", "і": "қ", "І": "ғ", "ґ": "ў", "Ґ": "Ў"},
+}
+
+
+def eski_shrift(matn, nom):
+    """cp1251 baytlari latin-1 sifatida oʻqilgan matnni tiklaydi."""
+    tiklangan = matn.encode("latin-1", "replace").decode("cp1251", "replace")
+    return tiklangan.translate(str.maketrans(SHRIFTLAR[nom]))
 
 
 def xom_matn(fayl):
@@ -177,18 +199,24 @@ def abzaclar(matn, satr_abzac=False):
     """
     matn = matn.replace("\u00ad", "")
     takror = kolontitullar(matn)
+    uzunliklar = [len(q.strip()) for q in matn.splitlines() if len(q.strip()) > 20]
+    en_uzun = max(uzunliklar) if uzunliklar else 80
     if satr_abzac:
         natija = [q.strip() for q in matn.splitlines() if q.strip()]
     else:
         natija, joriy = [], []
         for qator in matn.splitlines():
             q = qator.strip()
-            if not q or AXLAT.match(q) or q in takror:
+            if not q or AXLAT.match(q) or SNOSKA.match(q) or q in takror:
                 if joriy:
                     natija.append(" ".join(joriy))
                     joriy = []
                 continue
             joriy.append(q)
+            # qatori kalta va nuqta bilan tugasa — abzac shu yerda tugaydi
+            if q[-1] in ".!?:»”" and len(q) < 0.72 * en_uzun:
+                natija.append(" ".join(joriy))
+                joriy = []
         if joriy:
             natija.append(" ".join(joriy))
     tozalangan = []
@@ -221,7 +249,10 @@ def main():
         if not fayl.exists():
             print("  yo'q:", y["fayl"])
             continue
-        matn = kesish(xom_matn(fayl), y["boshi"], y.get("oxiri"))
+        matn = xom_matn(fayl)
+        if y.get("shrift"):
+            matn = eski_shrift(matn, y["shrift"])
+        matn = kesish(matn, y["boshi"], y.get("oxiri"))
         paragraflar = abzaclar(matn, satr_abzac=fayl.suffix.lower() != ".pdf")
         if not paragraflar:
             print("  bo'sh:", y["fayl"])
