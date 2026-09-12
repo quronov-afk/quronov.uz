@@ -182,6 +182,15 @@ MUALLIFLAR = {
 }
 
 
+def tagsarlavha_html(m):
+    """Sarlavha ostidagi izohli tag sarlavha (bo'lsa)."""
+    t = m.get("tagsarlavha")
+    if not t:
+        return ""
+    return (f'\n  <p class="tagsarlavha" data-lat="{e(t)}" data-kir="{e(kirillga(t))}">'
+            f"{e(t)}</p>")
+
+
 def maqola_sahifasi(m):
     meta = meta_qatori(m)
     muallif = m.get("muallif", "Dilmurod Quronov")
@@ -203,7 +212,7 @@ def maqola_sahifasi(m):
     </div>
   </div>
 
-  <h1 data-lat="{e(m['title'])}" data-kir="{e(m['title_kir'])}">{e(m['title'])}</h1>
+  <h1 data-lat="{e(m['title'])}" data-kir="{e(m['title_kir'])}">{e(m['title'])}</h1>{tagsarlavha_html(m)}
   <p class="byline {rang}" data-lat="{e(ism_lat)}" data-kir="{e(ism_kir)}">{e(ism_lat)}</p>
   <p class="maqola-meta">{e(' · '.join(meta))}</p>
 
@@ -215,6 +224,7 @@ def maqola_sahifasi(m):
   </div>
 
   <p class="imzo" data-lat="{e(ism_lat)}" data-kir="{e(ism_kir)}">{e(ism_lat)}</p>
+  <p class="oqilgan" data-kalit="{e(m['slug'])}" hidden></p>
 </div>
 
 <script>
@@ -239,6 +249,7 @@ def maqola_sahifasi(m):
   try {{ if (localStorage.getItem('yozuv') === 'kir') qoy('kir'); }} catch (x) {{}}
 }})();
 </script>
+<script src="../oqilgan.js" defer></script>
 """ + PODVAL
 
 
@@ -258,6 +269,7 @@ def royxat_html(maqolalar, havola_oldi=""):
         <div class="entry-meta">
           <span class="author-tag">{e(ism)}</span>
           <span class="entry-date">{e(' · '.join(meta))}</span>
+          <span class="oqildi" data-kalit="{e(m['slug'])}"></span>
         </div>
         <h3><a href="{havola_oldi}maqola/{m['slug']}.html">{e(m['title'])}</a></h3>
         <p>{e(qisqacha(m))}</p>
@@ -335,6 +347,7 @@ def eski_saytdan_qoshish(maqolalar, fayl_nomi="eski_maqolalar.json"):
             "janr": m["janr"], "yil": m.get("yil") or (asl["yil"] if asl else None),
             "asl_manba": m.get("asl_manba") or (asl["manba"] if asl else None),
             "manba_sayt": m["manba_sayt"], "kitob": None, "yozgan": m.get("yozgan"),
+            "tagsarlavha": m.get("tagsarlavha"),
             "muallif": m.get("muallif", "Dilmurod Quronov"),
             "matn": m["matn"], "matn_kir": kir, "belgi": m["belgi"],
         })
