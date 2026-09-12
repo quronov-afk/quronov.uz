@@ -144,6 +144,7 @@ def meta_qatori(m):
 # Filtr ruknlari faqat janr asosida: mavzu teglari panelga chiqmaydi
 JANR_GURUH = {
     "Maqola": "Maqolalar", "Tezis": "Maqolalar", "Maqola (ingliz tilida)": "Maqolalar",
+    "Maqola (turk tilida)": "Maqolalar", "Maqola (rus tilida)": "Maqolalar",
     "Nutq": "Maʼruzalar", "Maʼruza": "Maʼruzalar",
     "Taqriz": "Taqrizlar", "So'z boshi": "Taqrizlar",
     "Suhbat": "Suhbatlar",
@@ -159,6 +160,7 @@ JANR_YORLIQ = {
     "Nutq": "Nutqlar", "So'z boshi": "Soʻz boshilar", "Asar": "Badiiy asarlar",
     "Tezis": "Tezislar", "Biografiya": "Biografiya", "Olim haqida": "Olim haqida",
     "Maqola (ingliz tilida)": "Ingliz tilida",
+    "Maqola (turk tilida)": "Turk tilida", "Maqola (rus tilida)": "Rus tilida",
 }
 
 MUALLIF_NOM = {
