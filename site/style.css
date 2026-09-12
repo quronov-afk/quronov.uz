@@ -655,3 +655,8 @@ img.avatar { object-fit: cover; background: var(--surface); }
 /* mavzu tugmasidagi maqolalar soni */
 .tag .soni { margin-left: 6px; font-family: var(--sans); font-size: 11px; color: var(--text-muted); }
 .tag:hover .soni { color: inherit; }
+
+/* dissertatsiya kartalari */
+.kitob.diss .muqova img { box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.diss-havolalar { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 0 !important; }
+.kutilmoqda-belgi { font-family: var(--sans); font-size: 13px; color: var(--text-muted); }

@@ -20,9 +20,11 @@ CHIQISH_MUQOVA = SITE / "img" / "kitoblar"
 DISSERTATSIYALAR = {
     "Dilmurod Quronov": [
         {"title": "Choʻlponning «Kecha va kunduz» romanida xarakterlar psixologizmi",
-         "izoh": "Nomzodlik dissertatsiyasi", "yil": 1992, "joy": "Toshkent"},
+         "izoh": "Nomzodlik dissertatsiyasi", "yil": 1992, "joy": "Toshkent",
+         "muqova": "dilmurod-nomzodlik-dissertatsiya.jpg"},
         {"title": "Choʻlpon poetikasi (nasriy asarlari asosida)",
-         "izoh": "Doktorlik dissertatsiyasi", "yil": 1998, "joy": "Toshkent"},
+         "izoh": "Doktorlik dissertatsiyasi", "yil": 1998, "joy": "Toshkent",
+         "muqova": "dilmurod-doktorlik-dissertatsiya.jpg"},
     ],
     "Saʼdullo Quronov": [
         {"title": "Mustaqillik davri oʻzbek romanlarida inson konsepsiyasi",
@@ -32,7 +34,7 @@ DISSERTATSIYALAR = {
         {"title": "Zamonaviy oʻzbek adabiyotida sintez muammosi "
                   "(sheʼriyat va rangtasvir sanʼatlari misolida)",
          "izoh": "Falsafa doktori (PhD) dissertatsiyasi", "yil": 2018,
-         "joy": "Andijon", "fayl": "sadullo-phd-dissertatsiya.pdf",
+         "joy": "Fargʻona", "fayl": "sadullo-phd-dissertatsiya.pdf",
          "avtoreferat": "sadullo-phd-avtoreferat.pdf", "kirill": True},
     ],
 }
@@ -43,7 +45,58 @@ def hajm(nom):
     return round(f.stat().st_size / 1048576, 1) if f.exists() else None
 
 
+def diss_muqova(d):
+    """Dissertatsiya muqovasi: PDF bor boʻlsa titul varagʻi, boʻlmasa oldindan chizilgan muqova."""
+    if d.get("muqova"):
+        return d["muqova"] if (CHIQISH_MUQOVA / d["muqova"]).exists() else None
+    if not d.get("fayl"):
+        return None
+    nom = Path(d["fayl"]).stem + ".jpg"
+    chiqish = CHIQISH_MUQOVA / nom
+    if not chiqish.exists():
+        vaqt = Path(tempfile.mkdtemp())
+        subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "110", "-jpeg",
+                        str(CHIQISH_PDF / d["fayl"]), str(vaqt / "titul")], capture_output=True)
+        rasmlar = sorted(vaqt.glob("titul*.jpg"))
+        if rasmlar:
+            subprocess.run(["sips", "-Z", "600", str(rasmlar[0]), "--out", str(chiqish)],
+                           capture_output=True)
+    return nom if chiqish.exists() else None
+
+
 def diss_html(olim):
+    """Dissertatsiyalar kitob kartasi koʻrinishida (muqova, nomi, maʼlumot, PDF havolalari)."""
+    kartalar = []
+    for d in DISSERTATSIYALAR.get(olim, []):
+        muqova_nomi = diss_muqova(d)
+        rasm = (f'<img src="img/kitoblar/{e(muqova_nomi)}" alt="" loading="lazy">'
+                if muqova_nomi else '<div class="muqova-yoq"></div>')
+        havola = f"kitoblar/{e(d['fayl'])}" if d.get("fayl") else None
+        muqova_blok = (f'<a class="muqova" href="{havola}">{rasm}</a>' if havola
+                       else f'<div class="muqova">{rasm}</div>')
+        sarlavha = (f'<a href="{havola}">{e(d["title"])}</a>' if havola else e(d["title"]))
+        havolalar = []
+        if d.get("fayl"):
+            havolalar.append(f'<a class="yuklab" href="kitoblar/{e(d["fayl"])}">'
+                             f'Dissertatsiya PDF · {hajm(d["fayl"])} MB</a>')
+        if d.get("avtoreferat"):
+            havolalar.append(f'<a class="yuklab" href="kitoblar/{e(d["avtoreferat"])}">'
+                             f'Avtoreferat PDF · {hajm(d["avtoreferat"])} MB</a>')
+        izoh = d["izoh"] + (" · kirill yozuvida" if d.get("kirill") else "")
+        pastki = (" ".join(havolalar) if havolalar
+                  else '<span class="kutilmoqda-belgi">PDF nusxasi tez orada joylanadi</span>')
+        kartalar.append(f"""      <article class="kitob diss">
+        {muqova_blok}
+        <div class="kitob-matn">
+          <h3>{sarlavha}</h3>
+          <p class="kitob-meta">{e(izoh)} · {e(d['joy'])}, {d['yil']}</p>
+          <p class="diss-havolalar">{pastki}</p>
+        </div>
+      </article>""")
+    return "\n".join(kartalar)
+
+
+def diss_html_eski(olim):
     qismlar = []
     for d in DISSERTATSIYALAR.get(olim, []):
         havolalar = []
@@ -126,7 +179,7 @@ def sahifa(kitoblar):
         diss = diss_html(yorliq)
         if diss:
             qism.append('    <h3 class="kitob-bolim kichik">Dissertatsiyalar</h3>')
-            qism.append(f'    <ul class="dissertatsiyalar">\n{diss}\n    </ul>')
+            qism.append(f'    <div class="kitoblar">\n{diss}\n    </div>')
         yashirin = "" if i == 0 else " hidden"
         bolimlar.append(f'  <section id="bolim-{belgi}" class="kitob-bolimi"{yashirin}>\n'
                         + chr(10).join(qism) + "\n  </section>")
