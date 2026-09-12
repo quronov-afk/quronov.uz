@@ -25,3 +25,6 @@ avatar/
 # Asl suratlar (saytga siqilgan nusxalari site/img/foto/ ichida).
 # Yo'l boshidagi «/» muhim: aks holda macOS'da site/img/foto ham chetda qoladi.
 /Foto/
+
+# Adabiyotshunoslik lugʻati manba fayli (saytga tayyor sahifalar chiqadi)
+/Adabiyotshunoslik lug‘ati.doc

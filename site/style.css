@@ -660,3 +660,50 @@ img.avatar { object-fit: cover; background: var(--surface); }
 .kitob.diss .muqova img { box-shadow: 0 1px 3px rgba(0,0,0,.08); }
 .diss-havolalar { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 0 !important; }
 .kutilmoqda-belgi { font-family: var(--sans); font-size: 13px; color: var(--text-muted); }
+
+/* oʻng ustundagi lugʻat tugmasi */
+.lugat-tugma {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); text-decoration: none; color: var(--text);
+  transition: border-color .15s, transform .15s;
+}
+.lugat-tugma:hover { border-color: var(--text-muted); transform: translateY(-1px); }
+.lugat-tugma-belgi {
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--text); color: var(--bg, #faf8f4); font: 600 15px var(--serif, Georgia), serif;
+}
+.lugat-tugma strong { display: block; font-weight: 500; font-size: 16px; line-height: 1.25; }
+.lugat-tugma small { display: block; font-family: var(--sans); font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* lugʻat sahifasi: alifbo, 4 ustun, sahifalash */
+.alifbo { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 22px; }
+.alifbo button {
+  min-width: 38px; height: 36px; padding: 0 10px; cursor: pointer;
+  font: 500 14px var(--sans); border: 1px solid var(--border); border-radius: 4px;
+  background: var(--surface); color: var(--text);
+}
+.alifbo button:hover { border-color: var(--text-muted); }
+.alifbo button.faol { background: var(--text); color: #fff; border-color: var(--text); }
+.alifbo button:disabled { opacity: .35; cursor: default; }
+.lugat-qidiruv { max-width: 420px; margin-bottom: 18px; }
+.terminlar { columns: 4 200px; column-gap: 32px; margin: 0; padding: 0; list-style: none; }
+.terminlar li { break-inside: avoid; padding: 5px 0; border-bottom: 1px dotted var(--border); }
+.terminlar a { color: var(--text); text-decoration: none; font-size: 16px; }
+.terminlar a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.terminlar .qarang-belgi { font-family: var(--sans); font-size: 12px; color: var(--text-muted); }
+.lugat-holat { font-family: var(--sans); font-size: 13px; color: var(--text-muted); margin: 0 0 12px; }
+
+/* termin sahifasi */
+.termin-sahifa .misra { font-style: italic; margin: 0 0 2px 28px; text-align: left; }
+.termin-sahifa .misra + p:not(.misra) { margin-top: 12px; }
+.termin-jadval { overflow-x: auto; margin: 16px 0; }
+.termin-jadval table { border-collapse: collapse; font-family: var(--sans); font-size: 14px; }
+.termin-jadval td { border: 1px solid var(--border); padding: 4px 10px; text-align: center; }
+.termin-manba { margin: 36px 0 0; padding: 14px 16px; border-left: 3px solid var(--border);
+  font-family: var(--sans); font-size: 14px; line-height: 1.6; color: var(--text-secondary); background: var(--surface); }
+.termin-manba strong { color: var(--text); font-weight: 500; }
+.termin-nav { display: flex; justify-content: space-between; gap: 16px; margin: 28px 0 0; font-family: var(--sans); font-size: 14px; }
+.termin-nav a { color: var(--text-secondary); text-decoration: none; }
+.termin-nav a:hover { color: var(--text); }

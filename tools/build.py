@@ -749,6 +749,8 @@ def main():
 
     print(f"{len(maqolalar)} ta maqola sahifasi yasaldi")
     print(f"qidiruv.json: {qidiruv_yasash(maqolalar)} KB")
+    from lugat_sahifalar import yasash as lugat_yasash
+    print(f"lugʻat: {lugat_yasash()} ta termin sahifasi")
     print(f"sitemap.xml: {sitemap_yasash()} ta sahifa")
 
     xatolar = havolalarni_tekshirish()

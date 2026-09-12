@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poema — Adabiyotshunoslik lugʻati</title>
+<meta name="description" content="Poema: (yun. poieo, poiema – ijod qilmoq, ijod qilingan) – qarang: doston">
+<link rel="canonical" href="https://quronov.uz/lugat/poema.html">
+<meta property="og:site_name" content="Quronov.uz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Poema — Adabiyotshunoslik lugʻati">
+<meta property="og:description" content="Poema: (yun. poieo, poiema – ijod qilmoq, ijod qilingan) – qarang: doston">
+<meta property="og:url" content="https://quronov.uz/lugat/poema.html">
+<meta property="og:image" content="https://quronov.uz/img/ulashish.jpg">
+<meta property="og:locale" content="uz_UZ">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="masthead">
+    <div class="wordmark"><a href="../index.html">Quronov<span>.uz</span></a></div>
+    <div class="tagline">Adabiyot va adabiyotshunoslik</div>
+  </div>
+  <div class="header-inner">
+    <nav class="nav">
+      <a href="../index.html">Bosh sahifa</a>
+      <a href="../dilmurod.html">Dilmurod Quronov</a>
+      <a href="../sadullo.html">Saʼdullo Quronov</a>
+      <a href="../kitoblar.html">Kitoblar PDF</a>
+      <a href="../galereya.html">Galereya</a>
+      <a href="../aloqa.html">Aloqa</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap maqola termin-sahifa">
+  <div class="maqola-top">
+    <a class="ortga" href="index.html#P">← Adabiyotshunoslik lugʻati</a>
+    <div class="yozuv-tanlov" role="group" aria-label="Yozuv turi">
+      <button type="button" data-yozuv="lat" class="tanlangan">Lotin</button>
+      <span>|</span>
+      <button type="button" data-yozuv="kir">Kirill</button>
+    </div>
+  </div>
+
+  <h1 data-lat="Poema" data-kir="Поэма">Poema</h1>
+
+  <div class="matn" id="matn-lat">
+<p><strong>Poema</strong> (yun. poieo, poiema – ijod qilmoq, ijod qilingan) – qarang: <a href="doston.html">doston</a></p>
+  </div>
+  <div class="matn" id="matn-kir" hidden>
+<p><strong>Поэма</strong> (юн. poieo, poiema – ижод қилмоқ, ижод қилинган) – қаранг: <a href="doston.html">достон</a></p>
+  </div>
+
+  <p class="termin-manba" data-lat="Dilmurod Quronov, Zokirjon Mamajonov, Mashhura Sheraliyeva. Adabiyotshunoslik lugʻati / f.f.d. D. Quronovning umumiy tahriri ostida. – Toshkent: Akademnashr, 2010. – 400 b." data-kir="Дилмурод Қуронов, Зокиржон Мамажонов, Машҳура Шералиева. Адабиётшунослик луғати / ф.ф.д. Д.Қуроновнинг умумий таҳрири остида. – Тошкент: Akademnashr, 2010. – 400 б."><strong>Manba:</strong> Dilmurod Quronov, Zokirjon Mamajonov, Mashhura Sheraliyeva. Adabiyotshunoslik lugʻati / f.f.d. D. Quronovning umumiy tahriri ostida. – Toshkent: Akademnashr, 2010. – 400 b.</p>
+  <p class="termin-manba-havola"><a class="yuklab" href="../kitoblar/adabiyotshunoslik-lugati-2010.pdf">Lugʻatni PDF shaklida oʻqish</a></p>
+
+  <nav class="termin-nav" aria-label="Qoʻshni terminlar"><a href="podtekst.html">← Podtekst</a><a href="poetik-til.html">Poetik til →</a></nav>
+</div>
+
+<script>
+(function () {
+  var tugma = document.querySelectorAll('.yozuv-tanlov button');
+  var manba = document.querySelector('.termin-manba');
+  function qoy(y) {
+    document.getElementById('matn-lat').hidden = (y === 'kir');
+    document.getElementById('matn-kir').hidden = (y !== 'kir');
+    var h1 = document.querySelector('h1');
+    h1.textContent = h1.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    manba.innerHTML = '<strong>' + (y === 'kir' ? 'Манба:' : 'Manba:') + '</strong> ' +
+      manba.getAttribute(y === 'kir' ? 'data-kir' : 'data-lat');
+    tugma.forEach(function (t) { t.classList.toggle('tanlangan', t.dataset.yozuv === y); });
+    try { localStorage.setItem('yozuv', y); } catch (x) {}
+  }
+  tugma.forEach(function (t) { t.addEventListener('click', function () { qoy(t.dataset.yozuv); }); });
+  try { if (localStorage.getItem('yozuv') === 'kir') qoy('kir'); } catch (x) {}
+})();
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2026 Quronov.uz</span>
+    <span><a href="mailto:squronov@gmail.com">squronov@gmail.com</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
