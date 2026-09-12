@@ -110,6 +110,7 @@ SHAPKA = """<!DOCTYPE html>
       <a href="{yol}sadullo.html"{sq}>Saʼdullo Quronov</a>
       <a href="{yol}kitoblar.html">Kitoblar PDF</a>
       <a href="{yol}galereya.html">Galereya</a>
+      <a href="{yol}aloqa.html">Aloqa</a>
     </nav>
   </div>
 </header>
@@ -119,7 +120,7 @@ PODVAL = """
 <footer class="site-footer">
   <div class="footer-inner">
     <span>© 2026 Quronov.uz</span>
-    <span><a href="#">info@quronov.uz</a></span>
+    <span><a href="mailto:squronov@gmail.com">squronov@gmail.com</a></span>
   </div>
 </footer>
 
