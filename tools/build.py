@@ -110,7 +110,6 @@ SHAPKA = """<!DOCTYPE html>
       <a href="{yol}sadullo.html"{sq}>Saʼdullo Quronov</a>
       <a href="{yol}kitoblar.html">Kitoblar PDF</a>
       <a href="{yol}galereya.html">Galereya</a>
-      <a href="#">Aloqa</a>
     </nav>
   </div>
 </header>
@@ -373,6 +372,22 @@ def galereya_sahifasi():
 """ + PODVAL
 
 
+def havolalarni_tekshirish():
+    """Sayt ichidagi havolalarni tekshiradi: yo'q fayl yoki bo'sh menyu havolasi."""
+    xatolar = []
+    for fayl in sorted(SITE.rglob("*.html")):
+        matn = fayl.read_text(encoding="utf-8")
+        for menyu in re.findall(r'<nav class="nav">(.*?)</nav>', matn, re.S):
+            for nom in re.findall(r'<a href="#"[^>]*>([^<]+)</a>', menyu):
+                xatolar.append(f"{fayl.relative_to(SITE)}: menyuda bo'sh havola — {nom}")
+        for havola in re.findall(r'(?:href|src)="([^"#:]+)"', matn):
+            if havola.startswith(("http", "//", "mailto")):
+                continue
+            if not (fayl.parent / havola).exists():
+                xatolar.append(f"{fayl.relative_to(SITE)}: yo'q fayl — {havola}")
+    return xatolar
+
+
 def main():
     maqolalar = json.loads((ROOT / "data" / "maqolalar.json").read_text(encoding="utf-8"))
     maqolalar = eski_saytdan_qoshish(maqolalar)
@@ -414,6 +429,12 @@ def main():
         (SITE / "galereya.html").write_text(sahifa, encoding="utf-8")
 
     print(f"{len(maqolalar)} ta maqola sahifasi yasaldi")
+
+    xatolar = havolalarni_tekshirish()
+    if xatolar:
+        print(f"\nDIQQAT: {len(xatolar)} ta havola muammosi:")
+        for x in sorted(set(xatolar))[:12]:
+            print("  -", x)
 
 
 if __name__ == "__main__":
