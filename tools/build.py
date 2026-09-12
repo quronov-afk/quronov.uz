@@ -143,25 +143,18 @@ def meta_qatori(m):
     return meta
 
 
-# Janr va mavzu teglari 10 tadan oshmasligi uchun guruhlarga birlashtiriladi
+# Filtr ruknlari faqat janr asosida: mavzu teglari panelga chiqmaydi
 JANR_GURUH = {
     "Maqola": "Maqolalar", "Tezis": "Maqolalar", "Maqola (ingliz tilida)": "Maqolalar",
-    "Suhbat": "Suhbat va nutqlar", "Nutq": "Suhbat va nutqlar",
-    "Taqriz": "Taqriz va soʻz boshi", "So'z boshi": "Taqriz va soʻz boshi",
-    "Olim haqida": "Olim haqida", "Biografiya": "Olim haqida", "Yangilik": "Olim haqida",
+    "Nutq": "Maʼruzalar", "Maʼruza": "Maʼruzalar",
+    "Taqriz": "Taqrizlar", "So'z boshi": "Taqrizlar",
+    "Suhbat": "Suhbatlar",
     "Asar": "Badiiy asarlar",
+    "Olim haqida": "Olim haqida", "Biografiya": "Olim haqida", "Yangilik": "Olim haqida",
 }
 
-TEG_GURUH = {
-    "Adabiyot nazariyasi": "Adabiyot nazariyasi", "Til va uslub": "Adabiyot nazariyasi",
-    "Adabiy tanqid": "Adabiy tanqid", "Adabiy jarayon": "Adabiy tanqid",
-    "Adabiy taʼlim": "Adabiy taʼlim",
-    "Sheʼriyat": "Sheʼriyat", "Navoiy": "Sheʼriyat", "Bobur": "Sheʼriyat",
-    "Zulfiya": "Sheʼriyat",
-    "Nasr": "Nasr va roman", "Roman": "Nasr va roman", "Qodiriy": "Nasr va roman",
-    "Choʻlpon": "Choʻlpon", "Jadid adabiyoti": "Choʻlpon",
-    "Tarjima": "Tarjima",
-}
+RUKNLAR = ["Maqolalar", "Maʼruzalar", "Taqrizlar", "Suhbatlar",
+           "Badiiy asarlar", "Olim haqida"]
 
 JANR_YORLIQ = {
     "Maqola": "Maqolalar", "Suhbat": "Suhbatlar", "Taqriz": "Taqrizlar",
@@ -250,13 +243,8 @@ def maqola_sahifasi(m):
 
 
 def guruhlar(m):
-    """Yozuvga tegishli suzgi guruhlari (janr guruhi + mavzu guruhlari)."""
-    natija = [JANR_GURUH.get(m["janr"], m["janr"])]
-    for t in m["teglar"]:
-        g = TEG_GURUH.get(t)
-        if g and g not in natija:
-            natija.append(g)
-    return natija
+    """Yozuv tegishli boʻlgan rukn (janr asosida)."""
+    return [JANR_GURUH.get(m["janr"], m["janr"])]
 
 
 def royxat_html(maqolalar, havola_oldi=""):
@@ -277,6 +265,16 @@ def royxat_html(maqolalar, havola_oldi=""):
     return "\n".join(qismlar)
 
 
+def matbuot_ruknlari(muallif):
+    """Matbuot yozuvlari qaysi ruknlarga tegishli ekani."""
+    fayl = ROOT / "data" / "matbuot.json"
+    if not fayl.exists():
+        return set()
+    return {m.get("rukn", "Maqolalar")
+            for m in json.loads(fayl.read_text(encoding="utf-8"))
+            if m["muallif"] == muallif}
+
+
 def matbuot_html(muallif):
     """Boshqa nashrlarda chiqqan materiallar: sarlavha, manba va havola."""
     fayl = ROOT / "data" / "matbuot.json"
@@ -287,7 +285,7 @@ def matbuot_html(muallif):
     if not yozuvlar:
         return ""
     yozuvlar.sort(key=lambda m: m["sana"], reverse=True)
-    qismlar = ['      <p class="section-label">Matbuotda</p>']
+    qismlar = ['      <p class="section-label">Internet nashrlarida</p>']
     oylar = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul",
              "avgust", "sentabr", "oktabr", "noyabr", "dekabr"]
     for m in yozuvlar:
@@ -295,7 +293,7 @@ def matbuot_html(muallif):
         if re.fullmatch(r"\d{4}-\d{2}-\d{2}", m["sana"] or ""):
             y, o, k = m["sana"].split("-")
             sana = f"{y}, {int(k)}-{oylar[int(o) - 1]}"
-        qismlar.append(f"""      <article class="matbuot-entry">
+        qismlar.append(f"""      <article class="matbuot-entry" data-teg="{e(m.get('rukn', 'Maqolalar'))}">
         <div class="entry-meta">
           <span class="nashr">{e(m['nashr'])}</span>
           <span class="entry-date">{e(sana)}</span>
@@ -410,12 +408,8 @@ def main():
         uniki = [m for m in maqolalar if m.get("muallif", "Dilmurod Quronov") == muallif]
         if not uniki:
             continue
-        from collections import Counter
-        sanoq = Counter(g for m in uniki for g in guruhlar(m))
-        janr_guruh = [g for g in ("Maqolalar", "Suhbat va nutqlar", "Taqriz va soʻz boshi",
-                                  "Badiiy asarlar", "Olim haqida") if g in sanoq]
-        mavzu_guruh = [g for g, _ in sanoq.most_common() if g not in janr_guruh]
-        tanlangan = (janr_guruh + mavzu_guruh)[:9]
+        bor = {g for m in uniki for g in guruhlar(m)} | matbuot_ruknlari(muallif)
+        tanlangan = [g for g in RUKNLAR if g in bor]
         panel = ['      <a class="tag active" href="#" data-suzgi="">Barchasi</a>']
         panel += [f'      <a class="tag" href="#" data-suzgi="{e(g)}">{e(g)}</a>' for g in tanlangan]
         belgilar_orasiga(SITE / sahifa, "teglar", "\n".join(panel))

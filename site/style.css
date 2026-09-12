@@ -256,8 +256,22 @@ img.avatar { object-fit: cover; background: var(--surface); }
   font-family: var(--sans);
   font-size: 14px;
   color: var(--text-muted);
+  margin: 0 0 6px;
+}
+
+.biografiya-havola {
+  font-family: var(--sans);
+  font-size: 14px;
   margin: 0 0 12px;
 }
+
+.biografiya-havola a {
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+}
+
+.biografiya-havola a:hover { color: var(--text); border-bottom-color: currentColor; }
 
 .author-head .bio { margin: 0; color: var(--text-secondary); max-width: 640px; font-size: 16px; }
 
