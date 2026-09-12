@@ -100,10 +100,10 @@ YOZUVLAR = [
      "manba": "Ilmiy xabarnoma (ADU), 2013, № 1",
      "boshi": "РАНГТАСВИРНИНГ МОДЕРН ОҚИМЛАРИ ВА МОДЕРН ШЕЪРИЯТ", "oxiri": "Адабиётлар"},
 
-    {"fayl": "xabarnoma 2015_№4-2.pdf", "til": "kir", "janr": "Maqola", "yil": 2015,
+    {"fayl": "yana/XX аср аввалида Чўлпон.doc", "til": "kir", "janr": "Maqola", "yil": 2015,
      "sarlavha": "Choʻlpon sheʼriyatida badiiy obrazning vizuallashuvi",
      "manba": "Ilmiy xabarnoma (ADU), 2015, № 4",
-     "boshi": "ЧЎЛПОН ШЕЪРИЯТИДА БАДИИЙ ОБРАЗНИНГ ВИЗУАЛЛАШУВИ", "oxiri": "Адабиётлар"},
+     "boshi": "ЧЎЛПОН ШЕЪРИЯТИДА БАДИИЙ ОБРАЗНИНГ ВИЗУАЛЛАШУВИ"},
 
     # skanerdan oʻqilganlar (matn qatlami yoʻq, tesseract bilan tanilgan)
     {"fayl": "4. Минг бир қиёфа романи.pdf", "ocr": True, "bet": 3, "bet_oxiri": 8,
@@ -112,10 +112,10 @@ YOZUVLAR = [
      "manba": "«Sharq yulduzi» jurnali, 2023, № 10",
      "boshi": "XIX аср охири ва ХХ аср бошларида"},
 
-    {"fayl": "Sharq yulduzi # 1-2015.pdf", "til": "kir", "janr": "Maqola", "yil": 2015,
-     "sarlavha": "Oybek lirikasida badiiy sintez",
+    {"fayl": "yana/ОЙБЕК ЛИРИКАСИДА БАДИИЙ СИНТЕЗ.doc", "til": "kir", "janr": "Maqola",
+     "yil": 2015, "sarlavha": "Oybek lirikasida badiiy sintez",
      "manba": "«Sharq yulduzi» jurnali, 2015, № 1",
-     "boshi": "Тил универсал фикрлаш ва ифодалаш"},
+     "boshi": "ОЙБЕК ЛИРИКАСИДА БАДИИЙ СИНТЕЗ"},
 
     {"fayl": "Тафаккур-Suhbat.pdf", "til": "kir", "janr": "Suhbat", "yil": None,
      "sarlavha": "Takomil mashaqqatlari. Ulugʻbek Hamdam bilan suhbat",
@@ -139,6 +139,49 @@ YOZUVLAR = [
      "manba": "«Jahon adabiyoti» jurnali (hammuallif Dilnavoz Yusupova)",
      "boshi": "Мумтоз санъат намуналарини"},
 
+    # «yana» papkasi: muallifning Word nusxalari
+    {"fayl": "yana/ЎЗБЕК МОДЕРН ШЕЪРИЯТИДА ФОЛЬКЛОРИЗМ.doc", "til": "kir", "janr": "Tezis",
+     "yil": 2015,
+     "sarlavha": "Faxriyor sheʼriyatida folklorizm: mifologik obrazlarning vizuallashuvi",
+     "manba": "Xalqaro ilmiy konferensiya materiallari. Nukus, 2015",
+     "boshi": "ФАХРИЁР ШЕЪРИЯТИДА ФОЛЬКЛОРИЗМ: МИФОЛОГИК ОБРАЗЛАРНИНГ ВИЗУАЛЛАШУВИ"},
+
+    {"fayl": "yana/ШАРҚ-МУМТОЗ-СИНТЕЗ-ОХИРИ.doc", "til": "kir", "janr": "Maqola", "yil": 2017,
+     "sarlavha": "Sharq mumtoz adabiyotida badiiy sintezning ahamiyati",
+     "manba": "«Filologiya masalalari» jurnali, 2017, № 1",
+     "boshi": "ШАРҚ МУМТОЗ АДАБИЁТИДА БАДИИЙ СИНТЕЗНИНГ АҲАМИЯТИ"},
+
+    {"fayl": "yana/Sa_dullo Quronov RTF.rtf", "til": "xor", "janr": "Maqola (ingliz tilida)",
+     "yil": None, "slug": "importance-of-literal-synthesis-in-the-oriental-classic-literature",
+     "sarlavha": "Importance of literal synthesis in the oriental classic literature",
+     "manba": None, "boshi": "Abstract."},
+
+    {"fayl": "yana/Инсон қиёфаси охирги.doc", "til": "kir", "janr": "Maqola", "yil": None,
+     "sarlavha": "Sheʼriyat va rangtasvirda inson tasviri", "manba": None,
+     "boshi": "ШЕЪРИЯТ ВА РАНГТАСВИРДА ИНСОН ТАСВИРИ"},
+
+    {"fayl": "yana/Мусаввир шоир-С.Қуронов.doc", "til": "kir", "janr": "Maqola", "yil": None,
+     "sarlavha": "Musavvir shoir", "manba": None, "boshi": "МУСАВВИР ШОИР"},
+
+    {"fayl": "yana/С.Қуронов-синтез_модерн_мақола.doc", "til": "kir", "janr": "Maqola",
+     "yil": None, "manba": None,
+     "sarlavha": "Oʻzbek modern sheʼriyatini oʻrganishda badiiy sintezning ahamiyati",
+     "boshi": "ЎЗБЕК МОДЕРН ШЕЪРИЯТИНИ ЎРГАНИШДА БАДИИЙ СИНТЕЗНИНГ АҲАМИЯТИ"},
+
+    {"fayl": "yana/ШЕЪРИЯТ ВА РАНГТАСВИР – ЭГИЗ САНЪАТЛАР.doc", "til": "kir", "janr": "Maqola",
+     "yil": None, "manba": None, "sarlavha": "Sheʼriyat va rangtasvir – egiz sanʼatlar",
+     "boshi": "ШЕЪРИЯТ ВА РАНГТАСВИР – ЭГИЗ САНЪАТЛАР"},
+
+    {"fayl": "yana/ЯНГИ-ЎЗБЕК-ШЕЪРИЯТИДА-БАДИИЙ-СИНТЕЗНИНГ-ЎРНИ1111.doc", "til": "kir",
+     "janr": "Maqola", "yil": None, "manba": None,
+     "sarlavha": "Yangi oʻzbek sheʼriyatida badiiy sintezning oʻrni (Oybek lirikasi misolida)",
+     "boshi": "ЯНГИ ЎЗБЕК ШЕЪРИЯТИДА БАДИИЙ СИНТЕЗНИНГ ЎРНИ"},
+
+    {"fayl": "yana/С.Қуронов-Ёшликка.doc", "til": "kir", "janr": "Taqriz", "yil": None,
+     "manba": "«Yoshlik» jurnali",
+     "sarlavha": "Maktub. Nargiza Odinayevaning «Toʻrt tomon» toʻplami haqida",
+     "slug": "maktub-nargiza-odinayevaning-tort-tomon-toplami-haqida",
+     "boshi": "МАКТУБ"},
 ]
 
 AXLAT = re.compile(
@@ -278,7 +321,8 @@ def bosh_tozalash(p):
         sozlar.pop(0)
     if sozlar[:1] in (["Quronov"], ["Қуронов"], ["Quronov,"]):
         sozlar.pop(0)
-    return " ".join(sozlar)
+    matn = " ".join(sozlar)
+    return matn[:1].upper() + matn[1:]           # «мазкур мақолада…» → «Мазкур…»
 
 
 def main():
