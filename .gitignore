@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# Manba materiallar: asl kitob PDF'lari, skaner va hujjatlar.
+# Bular kompyuterda saqlanadi, GitHub'ga yuklanmaydi — saytga faqat
+# site/ papkasidagi tayyor nusxalar chiqadi.
+D.Quronov kitoblar_PDF/
+quronov.uz materiallar/
+Sa'dullo Quronov/
+
+# Arxivdan yuklangan xom sahifalar va oraliq ma'lumot
+data/arxiv_sahifalar/
+data/arxiv_xom.json
+data/eski_sayt.json
+data/baner-variantlar/
+
+# Vaqtinchalik fayllar
+*.tif
+*.tmp
+~$*
