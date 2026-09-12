@@ -90,6 +90,11 @@
 
   if (qidiruv) {
     qidiruv.addEventListener('input', function () { joriy = 1; chizish(); });
+    var ikona = document.getElementById('qidiruv-tugma');
+    if (ikona) ikona.addEventListener('click', function () {
+      var soz = qidiruv.value.trim();
+      location.href = 'qidiruv.html' + (soz ? '?q=' + encodeURIComponent(soz) : '');
+    });
     qidiruv.addEventListener('keydown', function (ev) {
       if (ev.key === 'Enter' && qidiruv.value.trim()) {
         location.href = 'qidiruv.html?q=' + encodeURIComponent(qidiruv.value.trim());

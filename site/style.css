@@ -707,3 +707,13 @@ img.avatar { object-fit: cover; background: var(--surface); }
 .termin-nav { display: flex; justify-content: space-between; gap: 16px; margin: 28px 0 0; font-family: var(--sans); font-size: 14px; }
 .termin-nav a { color: var(--text-secondary); text-decoration: none; }
 .termin-nav a:hover { color: var(--text); }
+
+/* qidiruv maydonidagi lupa belgisi */
+.qidiruv-qutisi { position: relative; }
+.qidiruv-qutisi .search { width: 100%; padding-right: 44px; box-sizing: border-box; }
+.qidiruv-ikona {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 4px; background: transparent; color: var(--text-muted); cursor: pointer;
+}
+.qidiruv-ikona:hover { color: var(--text); background: var(--surface); }
