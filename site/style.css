@@ -651,3 +651,7 @@ img.avatar { object-fit: cover; background: var(--surface); }
 .natija p { margin: 0; color: var(--text-secondary); font-size: 15px; line-height: 1.6; }
 .natija mark { background: #f3e2a8; color: inherit; padding: 0 1px; border-radius: 2px; }
 .sidebar .butun-matn { display: inline-block; margin-top: 8px; font-family: var(--sans); font-size: 13px; color: var(--text-secondary); }
+
+/* mavzu tugmasidagi maqolalar soni */
+.tag .soni { margin-left: 6px; font-family: var(--sans); font-size: 11px; color: var(--text-muted); }
+.tag:hover .soni { color: inherit; }

@@ -29,8 +29,20 @@ TEG_QOIDA = [
     ("Adabiy taʼlim", ["таълим", "дарслик", "ўқув режа"]),
     ("Tarjima", ["таржима"]),
     ("Til va uslub", ["бадиий нутқ", "услуб", "ритм"]),
+    ("Inson konsepsiyasi", ["инсон концепция", "шахс концепция"]),
+    ("Modernizm", ["модерн"]),
+    ("Postmodernizm", ["постмодерн"]),
+    ("Badiiy sintez", ["синтез"]),
+    ("Tasviriy sanʼat", ["рангтасвир", "мусаввир", "миниатюра", "расс"]),
+    ("Mumtoz adabiyot", ["мумтоз"]),
+    ("Folklor va mif", ["фольклор", "фолклор", "миф", "афсона"]),
+    ("Dramaturgiya", ["драма", "театр", "саҳна"]),
+    ("Bolalar adabiyoti", ["болалар адабиёт", "болалар учун", "болалар ёзувчи", "фантастик"]),
+    ("Oybek", ["ойбек"]),
 ]
-SHAXS = {"Choʻlpon", "Qodiriy", "Navoiy", "Bobur", "Zulfiya"}
+SHAXS = {"Choʻlpon", "Qodiriy", "Navoiy", "Bobur", "Zulfiya", "Oybek"}
+# kam uchraydigan, lekin sayt uchun muhim mavzular uchun pastroq chegara
+CHEGARA = {"Bolalar adabiyoti": 4, "Postmodernizm": 5, "Badiiy sintez": 5}
 
 
 def teglar(m):
@@ -39,11 +51,11 @@ def teglar(m):
     ball = []
     for nom, kalitlar in TEG_QOIDA:
         n = sum(matn.count(k) for k in kalitlar) + 8 * sum(sarlavha.count(k) for k in kalitlar)
-        chegara = 12 if nom in SHAXS else 8
+        chegara = CHEGARA.get(nom, 12 if nom in SHAXS else 8)
         if n >= chegara:
             ball.append((n, nom))
     ball.sort(reverse=True)
-    return [nom for _, nom in ball[:3]]
+    return [nom for _, nom in ball[:4]]
 
 
 TRANSLIT = {"а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
@@ -605,6 +617,71 @@ def sitemap_yasash():
     return len(sahifalar)
 
 
+def qoshilgan_vaqtlari():
+    """Har bir maqola sahifasi repozitoriyaga birinchi marta qoʻshilgan vaqt (git).
+    Hali commit qilinmagan yangi maqola «hozir» qoʻshilgan hisoblanadi."""
+    import subprocess, time
+    vaqt = {}
+    try:
+        r = subprocess.run(["git", "log", "--diff-filter=A", "--name-only", "--format=@%ct",
+                            "--", "site/maqola"], cwd=ROOT, capture_output=True, text=True)
+        joriy = None
+        for q in r.stdout.splitlines():
+            if q.startswith("@"):
+                joriy = int(q[1:])
+            elif q.startswith("site/maqola/") and q.endswith(".html") and joriy:
+                slug = q[len("site/maqola/"):-5]
+                vaqt[slug] = min(vaqt.get(slug, joriy), joriy)
+    except OSError:
+        pass
+    return vaqt, int(time.time())
+
+
+def mavzu_slug(nom):
+    from kitobdan import slugify
+    return slugify(nom)
+
+
+def mavzu_sahifalari(maqolalar):
+    """site/mavzu/<slug>.html — mavzu boʻyicha maqolalar roʻyxati; bosh sahifa uchun (nom, soni, slug)."""
+    from collections import defaultdict
+    guruh = defaultdict(list)
+    for m in maqolalar:
+        for t in m.get("teglar", []):
+            guruh[t].append(m)
+    papka = SITE / "mavzu"
+    papka.mkdir(exist_ok=True)
+    for eski in papka.glob("*.html"):
+        eski.unlink()
+    royxat = []
+    for nom, uniki in sorted(guruh.items(), key=lambda x: (-len(x[1]), x[0])):
+        slug = mavzu_slug(nom)
+        meta_html = meta_teglar(f"{nom} — Quronov.uz",
+                                f"«{nom}» mavzusidagi {len(uniki)} ta maqola: Dilmurod Quronov va "
+                                "Saʼdullo Quronov ilmiy-ijodiy merosidan.", f"mavzu/{slug}.html")
+        sahifa = SHAPKA.format(title=f"{e(nom)} — Quronov.uz", yol="../", dq="", sq="",
+                               meta=meta_html) + f"""
+<div class="wrap">
+  <section class="intro">
+    <p class="section-label">Mavzu</p>
+    <h1>{e(nom)}</h1>
+    <p>{len(uniki)} ta maqola</p>
+  </section>
+  <main>
+    <div id="royxat">
+{royxat_html(uniki, "../")}
+    </div>
+    <nav class="sahifalar" id="sahifalar" aria-label="Sahifalar"></nav>
+  </main>
+</div>
+<script src="../sayt.js"></script>
+<script src="../oqilgan.js" defer></script>
+""" + PODVAL
+        (papka / f"{slug}.html").write_text(sahifa, encoding="utf-8")
+        royxat.append((nom, len(uniki), slug))
+    return royxat
+
+
 def havolalarni_tekshirish():
     """Sayt ichidagi havolalarni tekshiradi: yo'q fayl yoki bo'sh menyu havolasi."""
     xatolar = []
@@ -653,8 +730,18 @@ def main():
         belgilar_orasiga(SITE / sahifa, "royxat", royxat_html(uniki))
         belgilar_orasiga(SITE / sahifa, "matbuot", matbuot_html(muallif))
 
-    # bosh sahifadagi so'nggi yozuvlar
-    belgilar_orasiga(SITE / "index.html", "oqim", royxat_html(maqolalar[:5], ""))
+    # bosh sahifadagi soʻnggi yozuvlar: saytga soʻnggi qoʻshilganlar birinchi
+    vaqtlar, hozir = qoshilgan_vaqtlari()
+    songgilar = sorted(maqolalar, key=lambda m: (-vaqtlar.get(m["slug"], hozir),
+                                                 -(m["yil"] or 0), m["title"]))
+    belgilar_orasiga(SITE / "index.html", "oqim", royxat_html(songgilar[:5], ""))
+
+    # bosh sahifadagi mavzular: eng koʻp maqolali mavzular oldinda
+    mavzular = mavzu_sahifalari(maqolalar)
+    tugmalar = "\n".join(
+        f'          <a class="tag" href="mavzu/{slug}.html">{e(nom)}<span class="soni">{soni}</span></a>'
+        for nom, soni, slug in mavzular[:18])
+    belgilar_orasiga(SITE / "index.html", "mavzular", tugmalar)
 
     sahifa = galereya_sahifasi()
     if sahifa:
