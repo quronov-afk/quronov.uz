@@ -365,12 +365,14 @@ def galereya_sahifasi():
                 manba = f"<span>{e(r['manba'])}</span>" if r.get("manba") else ""
                 izoh = f"\n        <figcaption>{e(r.get('nom', ''))}{manba}</figcaption>"
             return (f"""      <figure class="foto">
-        <img src="{e(r['fayl'])}" alt="{e(r.get('nom', 'Quronovlar arxividan surat'))}"
-             loading="lazy">{izoh}
+        <a href="{e(r['fayl'])}" target="_blank" rel="noopener">
+          <img src="{e(r['fayl'])}" alt="{e(r.get('nom', 'Quronovlar arxividan surat'))}"
+               loading="lazy">
+        </a>{izoh}
       </figure>""")
 
         foto_ichki = "\n".join(foto_karta(r) for r in rasmlar)
-        foto_blok = f'  <div class="galereya" id="foto" style="display:none">\n{foto_ichki}\n  </div>'
+        foto_blok = f'  <div class="galereya foto-tur" id="foto" style="display:none">\n{foto_ichki}\n  </div>'
     else:
         foto_blok = '  <div id="foto" style="display:none"></div>'
 

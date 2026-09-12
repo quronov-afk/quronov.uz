@@ -408,8 +408,23 @@ img.avatar { object-fit: cover; background: var(--surface); }
 }
 
 .video { margin: 0; }
+.galereya.foto-tur {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
 .foto { margin: 0; }
-.foto img { width: 100%; border-radius: 4px; display: block; }
+.foto a { display: block; }
+
+.foto img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 35%;
+  border-radius: 4px;
+  display: block;
+  background: var(--surface);
+}
 .foto figcaption { padding-top: 12px; font-size: 16px; line-height: 1.5; }
 .foto figcaption span { display: block; font-family: var(--sans); font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 .galereya-menyu { margin-bottom: 8px; }
