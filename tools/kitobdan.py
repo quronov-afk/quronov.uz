@@ -228,10 +228,18 @@ def lotinga(s):
     return "".join(natija)
 
 
+# kirillchaga oʻgirilmaydigan xalqaro qisqartmalar
+LOTINCHA_QOLADI = ("PhD", "DSc", "ISBN", "UDK", "PDF")
+
+# oʻgirishdan keyingi imlo tuzatishlari
+KIRILL_TUZAT = {"консепси": "концепци", "консепц": "концепц"}
+
+
 def kirillga(s):
     """Lotin yozuvidagi kitob uchun: teskari o'girish (taxminiy)."""
     # uch harfli birikmalar oldin tekshiriladi: «yoʻl» → «йўл» («ёʻл» emas)
-    uchliklar = [("yoʻ", "йў"), ("yo‘", "йў"), ("ygʻ", "йғ"), ("yg‘", "йғ")]
+    uchliklar = [("yoʻ", "йў"), ("yo‘", "йў"), ("ygʻ", "йғ"), ("yg‘", "йғ"),
+                 ("tsh", "тш")]  # «adabiyotshunos» → «ц» boʻlib ketmasligi uchun
     juftlar = [("oʻ", "ў"), ("o‘", "ў"), ("gʻ", "ғ"), ("g‘", "ғ"), ("ch", "ч"),
                ("sh", "ш"), ("ts", "ц"), ("ya", "я"), ("yo", "ё"), ("yu", "ю"),
                ("ye", "е")]
@@ -241,6 +249,11 @@ def kirillga(s):
              "x": "х", "y": "й", "z": "з", "ʼ": "ъ", "’": "ъ"}
     out, i = [], 0
     while i < len(s):
+        saqlangan = next((t for t in LOTINCHA_QOLADI if s.startswith(t, i)), None)
+        if saqlangan:
+            out.append(saqlangan)
+            i += len(saqlangan)
+            continue
         uchta = s[i:i + 3]
         mos3 = next((c for lat, c in uchliklar if uchta.lower() == lat), None)
         if mos3:
@@ -262,7 +275,10 @@ def kirillga(s):
         else:
             out.append(ch)
         i += 1
-    return "".join(out)
+    natija = "".join(out)
+    for xato, togri in KIRILL_TUZAT.items():
+        natija = natija.replace(xato, togri)
+    return natija
 
 
 ATOQLI = ["Andijon", "Bobur", "Choʻlpon", "Qodiriy", "Navoiy", "Zulfiya", "Hamza",

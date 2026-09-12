@@ -225,6 +225,7 @@ a { color: inherit; text-decoration: none; }
 
 .archive a { display: block; padding: 3px 0; color: var(--text-secondary); }
 .archive a:hover { color: var(--text); }
+.kitob-royxat span { display: block; padding: 3px 0; color: var(--text-secondary); }
 
 .author-head {
   display: flex;
