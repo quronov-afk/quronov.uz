@@ -359,13 +359,20 @@ def galereya_sahifasi():
     rasm_fayl = ROOT / "data" / "rasmlar.json"
     rasmlar = json.loads(rasm_fayl.read_text(encoding="utf-8")) if rasm_fayl.exists() else []
     if rasmlar:
-        foto_ichki = "\n".join(f"""      <figure class="foto">
-        <img src="{e(r['fayl'])}" alt="{e(r.get('nom', ''))}" loading="lazy">
-        <figcaption>{e(r.get('nom', ''))}<span>{e(r.get('manba', ''))}</span></figcaption>
-      </figure>""" for r in rasmlar)
-        foto_blok = f'  <div class="galereya" id="foto" hidden>\n{foto_ichki}\n  </div>'
+        def foto_karta(r):
+            izoh = ""
+            if r.get("nom") or r.get("manba"):
+                manba = f"<span>{e(r['manba'])}</span>" if r.get("manba") else ""
+                izoh = f"\n        <figcaption>{e(r.get('nom', ''))}{manba}</figcaption>"
+            return (f"""      <figure class="foto">
+        <img src="{e(r['fayl'])}" alt="{e(r.get('nom', 'Quronovlar arxividan surat'))}"
+             loading="lazy">{izoh}
+      </figure>""")
+
+        foto_ichki = "\n".join(foto_karta(r) for r in rasmlar)
+        foto_blok = f'  <div class="galereya" id="foto" style="display:none">\n{foto_ichki}\n  </div>'
     else:
-        foto_blok = '  <div id="foto" hidden></div>'
+        foto_blok = '  <div id="foto" style="display:none"></div>'
 
     return SHAPKA.format(title="Galereya — Quronov.uz", yol="", dq="", sq="") + f"""
 <div class="wrap">
@@ -391,8 +398,10 @@ def galereya_sahifasi():
     t.addEventListener('click', function (ev) {{
       ev.preventDefault();
       tugma.forEach(function (x) {{ x.classList.toggle('active', x === t); }});
-      document.getElementById('video').hidden = t.dataset.bolim !== 'video';
-      document.getElementById('foto').hidden = t.dataset.bolim !== 'foto';
+      ['video', 'foto'].forEach(function (nom) {{
+        var el = document.getElementById(nom);
+        el.style.display = t.dataset.bolim === nom ? '' : 'none';
+      }});
     }});
   }});
 }})();
