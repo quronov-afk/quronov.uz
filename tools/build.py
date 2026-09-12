@@ -433,6 +433,7 @@ def main():
     maqolalar = eski_saytdan_qoshish(maqolalar, "qolgan_materiallar.json")
     maqolalar = eski_saytdan_qoshish(maqolalar, "skaner_maqolalar.json")
     maqolalar = eski_saytdan_qoshish(maqolalar, "arxiv_maqolalar.json")
+    maqolalar = eski_saytdan_qoshish(maqolalar, "sadullo_maqolalar.json")
     for m in maqolalar:
         m["teglar"] = teglar(m)
     maqolalar.sort(key=lambda m: (-(m["yil"] or 0), m["title"]))
