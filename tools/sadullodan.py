@@ -389,6 +389,7 @@ def bosh_tozalash(p):
 RUSCHA_ANNOT = re.compile(r"\b(статье|статья|Ключевые слова|Аннотация:?\s+В)\b|"
                           r"^(Аннотация|Annotatsiya)\s*:?\s*(В|V)\s", re.I)
 RUSCHA_HARF = re.compile(r"[ыщЫЩ]")
+OZBEK_HARF = re.compile(r"[ўқғҳЎҚҒҲ]")
 INGLIZCHA_ANNOT = re.compile(r"^(Abstract|Annotation|Resume|Key ?words)\b[.:]?", re.I)
 SNOSKA_RAQAM = re.compile(r"(?:(?<=[a-zʻʼа-яўқғҳ”»!?])|(?<=[a-zʻʼа-яўқғҳ”»]\.))\d{1,2}(?=[\s.,;:)]|$)")
 BIBLIO_SNOSKA = re.compile(r"(–|-)\s*(B|S|С|Б|C|P|Pp|T|Т)\.\s?\d+[\d–\-,\s]*\.?\s*$|"
@@ -451,6 +452,19 @@ QOLDA_TUZATISH = {
     ],
     "Şiirin geometrik şekli": [
         ("http//www. ashtray.ru.", ""),
+    ],
+    "Oʻtish davri romanlari va inson konsepsiyasi": [
+        # sahifa osti snoskasi matn orasiga tushib, ikki boʻlakka ajralgan — IZOHLAR ga koʻchirildi
+        ("Felli Ch. Homo Economicus vs Homo Sociologicus (https://", ""),
+        ("Sociologicus)", ""),
+    ],
+}
+
+# matndan olib tashlangan sahifa osti snoskalari: maqola oxirida «Izohlar» boʻlimida chiqadi
+IZOHLAR = {
+    "Oʻtish davri romanlari va inson konsepsiyasi": [
+        "XX аср ўзбек адабиёти масалалари. Тўплам. – Тошкент: Fan, 2012. – Б.40.",
+        "Felli Ch. Homo Economicus vs Homo Sociologicus.",
     ],
 }
 
@@ -612,7 +626,9 @@ def main():
         paragraflar = tozalash(paragraflar, y["til"])
         paragraflar = qolda_tuzat(paragraflar, y["sarlavha"], QOLDA_TUZATISH)
         if y["til"] == "kir":
-            lat = [p if RUSCHA_HARF.search(p) else lotinga(p) for p in paragraflar]
+            # ruscha xatboshi kirillda qoladi; oʻzbekcha xatboshi ichidagi ruscha ibora uni ruscha qilmaydi
+            lat = [p if RUSCHA_HARF.search(p) and not OZBEK_HARF.search(p) else lotinga(p)
+                   for p in paragraflar]
             kir = paragraflar
         elif y["til"] == "lat":
             lat = paragraflar
@@ -627,6 +643,9 @@ def main():
             "matn": lat, "matn_kir": kir,
             "belgi": sum(len(p) for p in paragraflar),
         })
+        if IZOHLAR.get(y["sarlavha"]):
+            chiqish[-1]["izohlar"] = [lotinga(t) for t in IZOHLAR[y["sarlavha"]]]
+            chiqish[-1]["izohlar_kir"] = IZOHLAR[y["sarlavha"]]
         print(f"  {len(paragraflar):3d} abzac  {y['sarlavha'][:58]}")
 
     (ROOT / "data" / "sadullo_maqolalar.json").write_text(

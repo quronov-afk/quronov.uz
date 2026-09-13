@@ -199,6 +199,9 @@ def chiqar(yangi):
             continue
         kir = j.get("matn_kir")
         lat = j.get("matn") or ([imloli_lotin(p) for p in kir] if kir else None)
+        # eski sayt kodlashi buzilgan lotin matn («soСz», «OТzMU») — toza kirillchadan olinadi
+        if lat and kir and len(re.findall(r"[a-zA-Z][СТУФЦ][a-zA-Z]|[СТ][a-z]|[УФ]", " ".join(lat))) > 10:
+            lat = [imloli_lotin(p) for p in kir]
         sarlavha = j["sarlavha"] if j.get("matn") else imloli_lotin(j["sarlavha"])
         yozuvlar.append({
             "slug": re.sub(r"-{2,}", "-", re.sub(r"[^a-z0-9]+", "-",

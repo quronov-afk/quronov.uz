@@ -58,6 +58,10 @@ def mavjud_kalitlar():
     return kalitlar
 
 
+def kirill_kop(p):
+    return len(re.findall(r"[а-яёўқғҳ]", p, re.I)) > len(p) * 0.3
+
+
 def main():
     xom = {n["fayl"]: n for n in
            json.loads((ROOT / "data" / "arxiv_xom.json").read_text(encoding="utf-8"))}
@@ -79,8 +83,9 @@ def main():
         else:
             sarlavha = sarlavha_tozala(n["sarlavha"])
             sarlavha_kir = kirillga(sarlavha)
-            matn = n["matn"]
-            matn_kir = [kirillga(p) for p in matn]
+            # lotin matn ichida kirillda qolgan xatboshilar ham lotinga oʻgiriladi
+            matn = [lotinga(p) if kirill_kop(p) else p for p in n["matn"]]
+            matn_kir = [p if kirill_kop(p) else kirillga(p) for p in n["matn"]]
 
         nisbat = max((max(difflib.SequenceMatcher(None, norm(sarlavha), a).ratio(),
                           difflib.SequenceMatcher(None, norm(" ".join(matn)[:400]), b).ratio())

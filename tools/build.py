@@ -520,6 +520,8 @@ def eski_saytdan_qoshish(maqolalar, fayl_nomi="eski_maqolalar.json"):
             "tagsarlavha": m.get("tagsarlavha"),
             "muallif": m.get("muallif", "Dilmurod Quronov"),
             "matn": m["matn"], "matn_kir": kir, "belgi": m["belgi"],
+            "izohlar": m.get("izohlar") or [],
+            "izohlar_kir": m.get("izohlar_kir") or [kirillga(t) for t in m.get("izohlar") or []],
         })
     return maqolalar
 
