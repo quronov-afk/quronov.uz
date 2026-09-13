@@ -1,24 +1,36 @@
 """Saytning inglizcha versiyasi: site/en/ sahifalari va barcha sahifalardagi til tugmasi.
 
 Ishlatish:  build.py ichidan chaqiriladi (yasash(), til_belgilari()).
-Maʼlumot:   data/en/interfeys.json — interfeys matnlari.
+Maʼlumot:   data/en/interfeys.json — interfeys matnlari, data/en/atamalar.json — atamalar.
 """
 
 import json, os, re
 from pathlib import Path
 
-from build import SITE, SAYT, PODVAL, e, meta_teglar
+from build import (SITE, SAYT, PODVAL, MUALLIFLAR, e, meta_teglar, muallif_ismi, manba_lotin,
+                   qisqacha, guruhlar, matbuot_ruknlari, RUKNLAR)
 
 ROOT = Path(__file__).resolve().parent.parent
 EN = SITE / "en"
 UI = json.loads((ROOT / "data" / "en" / "interfeys.json").read_text(encoding="utf-8"))
+AT = json.loads((ROOT / "data" / "en" / "atamalar.json").read_text(encoding="utf-8"))
+
+# yasaladigan inglizcha sahifalar (menyu shu roʻyxatga qarab tuziladi)
+SAHIFALAR = {"index.html", "dilmurod.html", "sadullo.html"}
+
+ASL_TIL = {"Maqola (ingliz tilida)": "en", "Maqola (turk tilida)": "tr", "Maqola (rus tilida)": "ru"}
+
+
+def en_ism(s):
+    """Oʻzbekcha ismning inglizcha yozilishi: Saʼdullo → Sadullo, Choʻlpon → Cholpon."""
+    return s.replace("Sa'dullo", "Sadullo").replace("ʻ", "").replace("ʼ", "").replace("'", "")
 
 
 def shapka(sarlavha, meta, yol, faol=""):
     """Inglizcha sahifa boshi. Menyuda faqat inglizchasi bor sahifalar koʻrinadi."""
     bandlar = []
     for b in UI["menyu"]:
-        if b["sahifa"] != "index.html" and not (EN / b["sahifa"]).exists():
+        if b["sahifa"] not in SAHIFALAR:
             continue
         cls = ' class="active"' if b["sahifa"] == faol else ""
         bandlar.append(f'      <a href="{yol}{b["sahifa"]}"{cls}>{e(b["nom"])}</a>')
@@ -54,27 +66,170 @@ def podval():
     return PODVAL.replace("© 2026 Quronov.uz", e(UI["podval"]))
 
 
-def bosh_sahifa():
+def meta_qatori(m):
+    meta = [AT["janr"].get(m["janr"], m["janr"])]
+    if m.get("yil"):
+        meta.append(str(m["yil"]))
+    manba = manba_lotin(m.get("asl_manba"))
+    if manba:
+        meta.append(manba)
+    if m.get("kitob"):
+        meta.append(UI["royxat"]["toplamdan"].format(kitob=m["kitob"].replace("'", "ʻ")))
+    return meta
+
+
+def yozuv_html(m):
+    """Roʻyxatdagi bitta yozuv: asl sarlavha, asl til belgisi, matn asl sahifada ochiladi."""
+    rang = MUALLIFLAR[m.get("muallif", "Dilmurod Quronov")][1]
+    til = ASL_TIL.get(m["janr"], "uz")
+    parcha = f"\n        <p>{e(qisqacha(m))}</p>" if til == "en" else ""
+    return f"""      <article class="entry {rang}" data-teg="{e(' '.join(guruhlar(m)))}">
+        <div class="entry-meta">
+          <span class="author-tag">{e(en_ism(muallif_ismi(m)[0]))}</span>
+          <span class="entry-date">{e(' · '.join(meta_qatori(m)))}</span>
+          <span class="til-belgi">{e(UI["tillar"][til])}</span>
+          <span class="oqildi" data-kalit="{e(m['slug'])}"></span>
+        </div>
+        <h3><a href="../maqola/{m['slug']}.html" lang="{til}">{e(m['title'])}</a></h3>{parcha}
+      </article>"""
+
+
+def matbuot_html(muallif):
+    fayl = ROOT / "data" / "matbuot.json"
+    if not fayl.exists():
+        return ""
+    yozuvlar = [m for m in json.loads(fayl.read_text(encoding="utf-8")) if m["muallif"] == muallif]
+    if not yozuvlar:
+        return ""
+    yozuvlar.sort(key=lambda m: m["sana"], reverse=True)
+    qismlar = [f'      <p class="section-label">{e(UI["royxat"]["matbuotda"])}</p>']
+    for m in yozuvlar:
+        sana = ""
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", m["sana"] or ""):
+            y, o, k = m["sana"].split("-")
+            sana = f"{int(k)} {UI['oylar'][int(o) - 1]} {y}"
+        qismlar.append(f"""      <article class="matbuot-entry" data-teg="{e(m.get('rukn', 'Maqolalar'))}">
+        <div class="entry-meta">
+          <span class="nashr">{e(m['nashr'])}</span>
+          <span class="entry-date">{e(sana)}</span>
+          <span class="til-belgi">{e(UI["tillar"]["uz"])}</span>
+        </div>
+        <h3><a href="{e(m['url'])}" target="_blank" rel="noopener" lang="uz">{e(m['sarlavha'])}</a></h3>
+        <p lang="uz">{e(m['parcha'])}</p>
+      </article>""")
+    return "\n".join(qismlar)
+
+
+def yon_ustun(qoshimcha=""):
+    y = UI["yon_ustun"]
+    return f"""    <aside class="sidebar">
+      <section>
+        <a class="lugat-tugma" href="../lugat/index.html" hreflang="uz">
+          <span class="lugat-tugma-belgi">Aa</span>
+          <span><strong>{e(y["lugat"])}</strong><small>{e(y["lugat_izoh"])}</small></span>
+        </a>
+      </section>
+
+      <section>
+        <h4>{e(y["mualliflar"])}</h4>
+        <a class="author-link" href="dilmurod.html"><span class="dot dq"></span>Dilmurod Quronov</a>
+        <a class="author-link" href="sadullo.html"><span class="dot sq"></span>{e(UI["olimlar"]["Sa'dullo Quronov"]["ism"])}</a>
+      </section>
+{qoshimcha}    </aside>"""
+
+
+def bosh_sahifa(songgilar, mavzular):
     b = UI["bosh_sahifa"]
     meta = meta_teglar(b["sarlavha"], b["tavsif"], "en/")
+    tugmalar = "\n".join(
+        f'          <a class="tag" href="../mavzu/{slug}.html" hreflang="uz">'
+        f'{e(AT["mavzu"].get(nom, nom))}<span class="soni">{soni}</span></a>'
+        for nom, soni, slug in mavzular[:18])
+    mavzu_blok = f"""
+      <section>
+        <h4>{e(UI["yon_ustun"]["mavzular"])}</h4>
+        <div class="tags">
+{tugmalar}
+        </div>
+      </section>
+"""
     return shapka(e(b["sarlavha"]), meta, "", "index.html") + f"""
 <div class="wrap">
+
   <section class="intro">
     <h1>{e(b["h1"])}</h1>
     <p>{e(b["kirish"])}</p>
+    <p class="en-izoh">{e(b["izoh"])}</p>
   </section>
-  <section class="en-tayyorlanmoqda">
-    <p>{e(b["tayyorlanmoqda"])}</p>
-    <p><a href="../index.html" hreflang="uz" lang="uz">{e(b["ozbekcha_havola"])}</a></p>
-  </section>
+
+  <div class="layout">
+
+    <main>
+      <p class="section-label">{e(b["songgi"])}</p>
+{chr(10).join(yozuv_html(m) for m in songgilar)}
+    </main>
+
+{yon_ustun(mavzu_blok)}
+
+  </div>
 </div>
+
+<script src="../oqilgan.js" defer></script>
 """ + podval()
 
 
-def yasash():
+def olim_sahifasi(muallif, maqolalar):
+    sahifa, rang = MUALLIFLAR[muallif]
+    o = UI["olimlar"][muallif]
+    uniki = [m for m in maqolalar if m.get("muallif", "Dilmurod Quronov") == muallif]
+    bor = {g for m in uniki for g in guruhlar(m)} | matbuot_ruknlari(muallif)
+    panel = [f'      <a class="tag active" href="#" data-suzgi="">{e(AT["rukn"]["Barchasi"])}</a>']
+    panel += [f'      <a class="tag" href="#" data-suzgi="{e(g)}">{e(AT["rukn"].get(g, g))}</a>'
+              for g in RUKNLAR if g in bor]
+    meta = meta_teglar(f'{o["ism"]} — Quronov.uz', o["tavsif"], f"en/{sahifa}", o["rasm"])
+    return shapka(f'{e(o["ism"])} — Quronov.uz', meta, "", sahifa) + f"""
+<div class="wrap">
+
+  <div class="author-head">
+    <img class="avatar" src="../{o["rasm"]}" alt="{e(o["ism"])}" width="84" height="84">
+    <div>
+      <h1>{e(o["ism"])}</h1>
+      <p class="role">{e(o["rol"])}</p>
+      <p class="biografiya-havola"><a href="../maqola/{o["biografiya"]}.html" hreflang="uz">{e(UI["olim_sahifasi"]["biografiya"])}</a></p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+{chr(10).join(panel)}
+  </div>
+
+  <div class="layout">
+    <main>
+      <p class="en-izoh">{e(UI["olim_sahifasi"]["izoh"])}</p>
+      <div id="royxat">
+{chr(10).join(yozuv_html(m) for m in uniki)}
+      </div>
+      <nav class="sahifalar" id="sahifalar" aria-label="{e(UI["royxat"]["sahifalar"])}"></nav>
+      <section class="matbuot">
+{matbuot_html(muallif)}
+      </section>
+    </main>
+
+{yon_ustun()}
+  </div>
+</div>
+
+<script src="../sayt.js"></script>
+<script src="../oqilgan.js" defer></script>
+""" + podval()
+
+
+def yasash(maqolalar, songgilar, mavzular):
     """site/en/ sahifalarini yasaydi; yasalgan sahifalar sonini qaytaradi."""
     EN.mkdir(exist_ok=True)
-    (EN / "index.html").write_text(bosh_sahifa(), encoding="utf-8")
+    (EN / "index.html").write_text(bosh_sahifa(songgilar, mavzular), encoding="utf-8")
+    for muallif, (sahifa, _) in MUALLIFLAR.items():
+        (EN / sahifa).write_text(olim_sahifasi(muallif, maqolalar), encoding="utf-8")
     return len(list(EN.rglob("*.html")))
 
 

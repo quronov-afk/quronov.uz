@@ -9,12 +9,51 @@
     {"sahifa": "galereya.html", "nom": "Gallery"},
     {"sahifa": "aloqa.html", "nom": "Contact"}
   ],
+  "tillar": {
+    "uz": "In Uzbek",
+    "en": "In English",
+    "tr": "In Turkish",
+    "ru": "In Russian"
+  },
+  "oylar": ["January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"],
+  "royxat": {
+    "toplamdan": "from the collection “{kitob}”",
+    "matbuotda": "In online media",
+    "sahifalar": "Pages"
+  },
+  "yon_ustun": {
+    "lugat": "Dictionary of Literary Studies",
+    "lugat_izoh": "Terms explained · in Uzbek",
+    "mualliflar": "Authors",
+    "mavzular": "Topics"
+  },
   "bosh_sahifa": {
     "sarlavha": "Quronov.uz — Literature and Literary Studies",
     "tavsif": "Articles, books, interviews and scholarly work of the Uzbek literary scholars Dilmurod Quronov and Sadullo Quronov.",
     "h1": "The scholarly and creative work of the literary scholars Dilmurod Quronov and Sadullo Quronov",
     "kirish": "Articles, conference papers, lectures, literary works and books in one place.",
-    "tayyorlanmoqda": "The English version of the site is in preparation. Translated articles and pages will be published here step by step; the full collection is currently available in Uzbek.",
-    "ozbekcha_havola": "Go to the Uzbek version →"
+    "izoh": "The English version of the site is being built step by step. Translations of selected works will appear here gradually; until then, texts open in their original language.",
+    "songgi": "Latest entries"
+  },
+  "olimlar": {
+    "Dilmurod Quronov": {
+      "ism": "Dilmurod Quronov",
+      "rol": "Literary scholar · Doctor of Philological Sciences, Professor",
+      "rasm": "img/dilmurod.jpg",
+      "biografiya": "dilmurod-quronov-haqida",
+      "tavsif": "Dilmurod Quronov, Uzbek literary scholar, Doctor of Philological Sciences, Professor: articles, reviews, interviews and literary works."
+    },
+    "Sa'dullo Quronov": {
+      "ism": "Sadullo Quronov",
+      "rol": "Literary scholar · Doctor of Philological Sciences · Children’s author",
+      "rasm": "img/sadullo.jpg",
+      "biografiya": "sadullo-quronov-haqida",
+      "tavsif": "Sadullo Quronov, Uzbek literary scholar, Doctor of Philological Sciences and children’s author: articles, conference papers and interviews."
+    }
+  },
+  "olim_sahifasi": {
+    "biografiya": "Biography (in Uzbek) →",
+    "izoh": "Works are listed under their original titles. English translations of selected works will be added step by step."
   }
 }

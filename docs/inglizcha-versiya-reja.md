@@ -3,7 +3,7 @@
 Maqsad: saytning inglizcha versiyasi. Yuqori oʻng burchakda til tanlash tugmasi, **asosiy til — oʻzbekcha**.
 Maqolalar professional tarjimon darajasida, bosqichma-bosqich, sekin-asta tarjima qilinadi.
 
-Holat: **0-bosqich bajarildi** (2026-09-13); navbatda — 1-bosqich.
+Holat: **0-bosqich bajarildi**, 1-bosqich jarayonda (2026-09-13): bosh sahifa va olimlar sahifalari tayyor; navbatda — Kitoblar, Galereya, Aloqa, Qidiruv, mavzu sahifalari.
 
 ---
 
@@ -35,8 +35,9 @@ Holat: **0-bosqich bajarildi** (2026-09-13); navbatda — 1-bosqich.
 
 - `tools/en.py` — `yasash()` inglizcha sahifalarni `site/en/` ga yozadi; `til_belgilari()` har sahifaga
   `<!-- til -->` (UZ | EN tugmasi) va `<!-- hreflang -->` bloklarini qoʻyadi. `build.py` oxirida chaqiriladi.
-- Menyuda faqat `site/en/` da mavjud sahifalar koʻrinadi; tarjimasi yoʻq sahifada EN → `/en/`.
-- Interfeys matnlari: `data/en/interfeys.json`. Yangi sahifa qoʻshish — `en.py` ga funksiya + `yasash()` ga qator.
+- Menyu `en.py` dagi `SAHIFALAR` toʻplamiga qarab tuziladi; tarjimasi yoʻq sahifada EN → `/en/`.
+- Interfeys matnlari: `data/en/interfeys.json`; mavzu, janr, rukn nomlari va atamalar: `data/en/atamalar.json`.
+- Tarjimasi yoʻq yozuvlar roʻyxatda asl sarlavhasi va «In Uzbek» belgisi bilan chiqadi, asl sahifaga olib boradi. Yangi sahifa qoʻshish — `en.py` ga funksiya + `yasash()` ga qator.
 
 ## Bosqichlar
 
@@ -76,7 +77,7 @@ Har partiyadan keyin: sayt yigʻiladi, tekshiriladi, push qilinadi, bu faylda ho
 | Bosqich | Mazmuni | Holat |
 |---|---|---|
 | 0 | Infratuzilma, til tugmasi | bajarildi (2026-09-13) |
-| 1 | Asosiy sahifalar | kutilmoqda |
+| 1 | Asosiy sahifalar | jarayonda: bosh sahifa, olimlar sahifalari tayyor |
 | 2 | Biografiyalar | kutilmoqda |
 | 3.1 | S. Quronov: inson konsepsiyasi, roman (≈12) | kutilmoqda |
 | 3.2 | S. Quronov: badiiy sintez (≈12) | kutilmoqda |

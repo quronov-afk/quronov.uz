@@ -1,0 +1,62 @@
+{
+  "mavzu": {
+    "Choʻlpon": "Cholpon",
+    "Qodiriy": "Qodiriy",
+    "Navoiy": "Navoi",
+    "Bobur": "Babur",
+    "Zulfiya": "Zulfiya",
+    "Oybek": "Oybek",
+    "Sheʼriyat": "Poetry",
+    "Nasr": "Prose",
+    "Roman": "The Novel",
+    "Adabiyot nazariyasi": "Literary Theory",
+    "Adabiy tanqid": "Literary Criticism",
+    "Jadid adabiyoti": "Jadid Literature",
+    "Adabiy taʼlim": "Literary Education",
+    "Tarjima": "Translation",
+    "Til va uslub": "Language and Style",
+    "Inson konsepsiyasi": "Concept of the Human",
+    "Modernizm": "Modernism",
+    "Postmodernizm": "Postmodernism",
+    "Badiiy sintez": "Artistic Synthesis",
+    "Tasviriy sanʼat": "Visual Arts",
+    "Mumtoz adabiyot": "Classical Literature",
+    "Folklor va mif": "Folklore and Myth",
+    "Dramaturgiya": "Drama",
+    "Bolalar adabiyoti": "Children’s Literature"
+  },
+  "janr": {
+    "Maqola": "Article",
+    "Tezis": "Conference paper",
+    "Maqola (ingliz tilida)": "Article",
+    "Maqola (turk tilida)": "Article",
+    "Maqola (rus tilida)": "Article",
+    "Nutq": "Speech",
+    "Maʼruza": "Lecture",
+    "Taqriz": "Review",
+    "So'z boshi": "Foreword",
+    "Suhbat": "Interview",
+    "Asar": "Literary work",
+    "Olim haqida": "About the scholar",
+    "Biografiya": "Biography",
+    "Yangilik": "News"
+  },
+  "rukn": {
+    "Barchasi": "All",
+    "Maqolalar": "Articles",
+    "Maʼruzalar": "Lectures",
+    "Taqrizlar": "Reviews",
+    "Suhbatlar": "Interviews",
+    "Badiiy asarlar": "Literary works",
+    "Olim haqida": "About the scholar"
+  },
+  "atamalar": {
+    "inson konsepsiyasi": "concept of the human",
+    "badiiy sintez": "artistic synthesis",
+    "badiiy tafakkur": "artistic thinking",
+    "romaniy tafakkur": "novelistic thinking",
+    "mumtoz adabiyot": "classical literature",
+    "adabiyotshunoslik": "literary studies",
+    "filologiya fanlari doktori": "Doctor of Philological Sciences"
+  }
+}

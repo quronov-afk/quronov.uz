@@ -37,7 +37,7 @@
     if (el.dataset.olingan) return;
     el.dataset.olingan = '1';
     sorov('/get/' + NOM + '/' + kalit(el.dataset.kalit)).then(function (n) {
-      if (n) el.textContent = son(n) + ' marta oʻqilgan';
+      if (n) el.textContent = son(n) + (document.documentElement.lang === 'en' ? ' views' : ' marta oʻqilgan');
     });
   }
   if ('IntersectionObserver' in window) {

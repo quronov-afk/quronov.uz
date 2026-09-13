@@ -62,12 +62,26 @@ a { color: inherit; text-decoration: none; }
 .til-tanlov .faol { color: var(--text); font-weight: 500; }
 .til-tanlov .ajratgich { color: var(--border); }
 
-.en-tayyorlanmoqda {
-  padding: 36px 0 64px;
-  max-width: 720px;
-  color: var(--text-secondary);
+.en-izoh {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 14px 0 0;
 }
-.en-tayyorlanmoqda a { border-bottom: 1px solid var(--border); color: var(--text); }
+main > .en-izoh { margin: 0 0 22px; }
+
+.til-belgi {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0 6px;
+  line-height: 1.7;
+}
 
 .masthead {
   background: #f9f4ec url("img/banner-books.jpg") center / cover no-repeat;

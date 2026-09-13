@@ -752,7 +752,7 @@ def main():
     from lugat_sahifalar import yasash as lugat_yasash
     print(f"lugʻat: {lugat_yasash()} ta termin sahifasi")
     import en
-    print(f"en: {en.yasash()} ta inglizcha sahifa")
+    print(f"en: {en.yasash(maqolalar, songgilar[:5], mavzular)} ta inglizcha sahifa")
     print(f"til tugmasi: {en.til_belgilari()} ta sahifa juftligi (hreflang)")
     print(f"sitemap.xml: {sitemap_yasash()} ta sahifa")
 
