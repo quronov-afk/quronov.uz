@@ -8,42 +8,59 @@
   var joy = document.getElementById('qidiruv-natija');
   var sahifalar = document.getElementById('qidiruv-sahifalar');
   var indeks = null, natijalar = [], sozlar = [], joriy = 1;
+  var EN = document.documentElement.lang === 'en';
+  var ILDIZ = EN ? '../' : '';
+  var JANR = window.JANR_EN || {};
+  var MATN = EN ? {
+    yuklanmoqda: 'Loading the index…',
+    topildi: function (n) { return n + (n === 1 ? ' work found' : ' works found'); },
+    yoq: 'Nothing found. Try a shorter form of the word.',
+    xato: 'The search index could not be loaded.'
+  } : {
+    yuklanmoqda: 'Maqolalar yuklanmoqda…',
+    topildi: function (n) { return n + ' ta maqola topildi'; },
+    yoq: 'Hech narsa topilmadi. Soʻzning qisqaroq shaklini kiritib koʻring.',
+    xato: 'Qidiruv indeksini yuklab boʻlmadi.'
+  };
 
   var KIR = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'j','з':'z','и':'i','й':'y',
     'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'x',
-    'ц':'s','ч':'ch','ш':'sh','щ':'sh','ъ':"'",'ь':'','ы':'i','э':'e','ю':'yu','я':'ya','ў':"o'",
-    'қ':'q','ғ':"g'",'ҳ':'h'};
+    'ц':'s','ч':'ch','ш':'sh','щ':'sh','ъ':'','ь':'','ы':'i','э':'e','ю':'yu','я':'ya','ў':'o',
+    'қ':'q','ғ':'g','ҳ':'h'};
 
   function norm(s) {
     return String(s).toLowerCase()
-      .replace(/[ʻʼ‘’`´]/g, "'")
+      .replace(/[ʻʼ‘’'`´]/g, '')
       .replace(/[а-яёўқғҳ]/g, function (h) { return KIR[h] || h; });
   }
   function xavfsiz(s) {
     return String(s).replace(/[&<>"]/g, function (h) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[h]; });
   }
   function regexp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  // apostroflar solishtirishda hisobga olinmaydi — asl matnda harflar orasida boʻlishi mumkin
+  function naqsh(w) { return w.split('').map(regexp).join("[ʻʼ‘’'`]?"); }
 
   function yukla() {
     if (indeks) return Promise.resolve(indeks);
-    holat.textContent = 'Maqolalar yuklanmoqda…';
-    return fetch('qidiruv.json').then(function (r) { return r.json(); }).then(function (d) {
+    holat.textContent = MATN.yuklanmoqda;
+    return fetch(ILDIZ + 'qidiruv.json').then(function (r) { return r.json(); }).then(function (d) {
       indeks = d.map(function (m) { m._t = norm(m.t); m._m = norm(m.m); return m; });
       return indeks;
     });
   }
 
   function parcha(m) {
-    var matn = m.m, past = m._m, eng = -1, uzun = 0;
-    sozlar.forEach(function (w) { var i = past.indexOf(w); if (i > -1 && (eng < 0 || i < eng)) { eng = i; uzun = w.length; } });
+    var matn = m.m, eng = -1, uzun = 0;
+    sozlar.forEach(function (w) {
+      var t = new RegExp(naqsh(w), 'i').exec(matn);
+      if (t && (eng < 0 || t.index < eng)) { eng = t.index; uzun = t[0].length; }
+    });
     if (eng < 0) return xavfsiz(matn.slice(0, 220)) + '…';
     var bosh = Math.max(0, eng - 90), oxir = Math.min(matn.length, eng + uzun + 130);
     var bolak = (bosh ? '…' : '') + matn.slice(bosh, oxir) + (oxir < matn.length ? '…' : '');
     var html = xavfsiz(bolak);
     sozlar.forEach(function (w) {
-      // asl matndagi apostrof shakllari farq qilishi mumkin — har harf orasiga ixtiyoriy belgi
-      var naqsh = w.split('').map(function (h) { return h === "'" ? "[ʻʼ‘’'`]" : regexp(h); }).join('');
-      html = html.replace(new RegExp('(' + naqsh + ')', 'gi'), '<mark>$1</mark>');
+      html = html.replace(new RegExp('(' + naqsh(w) + ')', 'gi'), '<mark>$1</mark>');
     });
     return html;
   }
@@ -53,15 +70,15 @@
     sahifalar.innerHTML = '';
     if (!sozlar.length) { holat.textContent = ''; return; }
     holat.textContent = natijalar.length
-      ? natijalar.length + ' ta maqola topildi'
-      : 'Hech narsa topilmadi. Soʻzning qisqaroq shaklini kiritib koʻring.';
+      ? MATN.topildi(natijalar.length)
+      : MATN.yoq;
     var boshi = (joriy - 1) * SAHIFADA;
     natijalar.slice(boshi, boshi + SAHIFADA).forEach(function (m) {
       var el = document.createElement('article');
       el.className = 'natija';
-      el.innerHTML = '<div class="entry-meta"><span class="author-tag">' + xavfsiz(m.a) + '</span>' +
-        '<span class="entry-date">' + xavfsiz(m.j + (m.y ? ' · ' + m.y : '')) + '</span></div>' +
-        '<h3><a href="maqola/' + encodeURIComponent(m.s) + '.html">' + xavfsiz(m.t) + '</a></h3>' +
+      el.innerHTML = '<div class="entry-meta"><span class="author-tag">' + xavfsiz(EN ? m.a.replace('Saʼdullo', 'Sadullo') : m.a) + '</span>' +
+        '<span class="entry-date">' + xavfsiz((JANR[m.j] || m.j) + (m.y ? ' · ' + m.y : '')) + '</span></div>' +
+        '<h3><a href="' + ILDIZ + 'maqola/' + encodeURIComponent(m.s) + '.html"' + (EN ? ' lang="uz"' : '') + '>' + xavfsiz(m.t) + '</a></h3>' +
         '<p>' + parcha(m) + '</p>';
       joy.appendChild(el);
     });
@@ -93,7 +110,7 @@
         return { m: m, ball: ball };
       }).filter(Boolean).sort(function (a, b) { return b.ball - a.ball; }).map(function (x) { return x.m; });
       chiz();
-    }).catch(function () { holat.textContent = 'Qidiruv indeksini yuklab boʻlmadi.'; });
+    }).catch(function () { holat.textContent = MATN.xato; });
   }
 
   forma.addEventListener('submit', function (ev) {

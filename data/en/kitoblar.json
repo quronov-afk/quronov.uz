@@ -1,0 +1,114 @@
+{
+  "turlar": {
+    "Darslik": "Textbook",
+    "Lug'at": "Dictionary",
+    "Monografiya": "Monograph",
+    "Maqolalar to'plami": "Collection of articles",
+    "Risola": "Booklet",
+    "Uslubiy qo'llanma": "Methodological guide"
+  },
+  "kitoblar": {
+    "adabiyot-nazariyasi-asoslari": {
+      "title": "Fundamentals of Literary Theory",
+      "note": "A major textbook setting out the core concepts of literary theory, the structure of the literary work and methods of analysis."
+    },
+    "adabiyotshunoslikka-kirish": {
+      "title": "Introduction to Literary Studies",
+      "note": "A university textbook on the subject matter, branches and key terms of literary studies."
+    },
+    "adabiyotshunoslik-lugati-2013": {
+      "title": "Dictionary of Literary Studies",
+      "note": "Co-authored with Z. Mamajonov and M. Sheraliyeva. An explanatory dictionary of literary terms; revised and expanded edition."
+    },
+    "adabiyotshunoslik-lugati-2010": {
+      "title": "Dictionary of Literary Studies",
+      "note": "The first edition of the dictionary of literary terms, co-authored with Z. Mamajonov and M. Sheraliyeva."
+    },
+    "cholpon-nasri-poetikasi": {
+      "title": "The Poetics of Cholpon’s Prose",
+      "note": "A study of the artistic structure, style and poetic features of Cholpon’s prose."
+    },
+    "cholpon-hayoti-va-ijodiy-merosi": {
+      "title": "Cholpon: Life and Literary Legacy",
+      "note": "On the life and literary legacy of the poet and prose writer Cholpon."
+    },
+    "adabiyot-nadir-cholponning-mangu-savoli": {
+      "title": "What Is Literature? or Cholpon’s Eternal Question",
+      "note": "Reflections on the question “What is literature?” posed by Cholpon."
+    },
+    "ruhiy-dunyo-tahlili": {
+      "title": "Analysing the Inner World",
+      "note": "The first major study of psychological characterisation in the novel “Kecha va kunduz” (Night and Day)."
+    },
+    "garb-adabiy-tanqidiy-tafakkuri": {
+      "title": "Essays on the History of Western Literary-Critical Thought",
+      "note": "Essays on the development of Western literary criticism and theory from antiquity to the present day."
+    },
+    "mutolaa-va-idrok-mashqlari": {
+      "title": "Exercises in Reading and Perception",
+      "note": "A collection of literary-critical articles and essays."
+    },
+    "nazariy-qaydlar": {
+      "title": "Theoretical Notes",
+      "note": "Notes on contested questions of literary theory."
+    },
+    "adabiy-oylar": {
+      "title": "Literary Reflections",
+      "note": "Reflections on the literary process, literary works and their authors."
+    },
+    "talqin-imkonlari": {
+      "title": "The Possibilities of Interpretation",
+      "note": "Articles on the problems of interpreting literary works, summarising the author’s principles of approaching a text."
+    },
+    "adabiyot-va-b-haqida": {
+      "title": "On Literature, etc.",
+      "note": "Scholarly articles on literary interpretation, compositional thinking, historical poetics and translation criticism."
+    },
+    "zavqimdan-bir-shingil": {
+      "title": "A Morsel of Delight",
+      "note": "Essays and articles on literature and the pleasure of reading."
+    },
+    "adabiy-jarayonda-mom-sindromi": {
+      "title": "The “Mom Sindromi” in the Literary Process",
+      "note": "A booklet analysing the phenomenon the author calls the “Mom sindromi” in the literary process."
+    },
+    "bitiruv-malakaviy-ishlar": {
+      "title": "Graduation Theses",
+      "note": "A methodological guide to writing a bachelor’s graduation thesis."
+    },
+    "egiz-sanatlar": {
+      "title": "Twin Arts",
+      "note": "A study of the synthesis of poetry and painting. In Cyrillic script."
+    },
+    "ifoda-va-ifodaviylik": {
+      "title": "Expression and Expressiveness",
+      "note": "Articles on artistic synthesis, modernism and postmodernism. In Cyrillic script."
+    },
+    "romanda-inson": {
+      "title": "The Human in the Novel",
+      "note": "A study of the depiction and concept of the human in Uzbek novels of the independence period. Executive editor: Dilmurod Quronov."
+    }
+  },
+  "dissertatsiyalar": {
+    "Choʻlponning «Kecha va kunduz» romanida xarakterlar psixologizmi": {
+      "title": "Psychological Characterisation in Cholpon’s Novel “Kecha va kunduz” (Night and Day)",
+      "izoh": "Candidate of Sciences dissertation"
+    },
+    "Choʻlpon poetikasi (nasriy asarlari asosida)": {
+      "title": "Cholpon’s Poetics (Based on His Prose Works)",
+      "izoh": "Doctor of Sciences dissertation"
+    },
+    "Mustaqillik davri oʻzbek romanlarida inson konsepsiyasi": {
+      "title": "The Concept of the Human in Uzbek Novels of the Independence Period",
+      "izoh": "Doctor of Sciences (DSc) dissertation"
+    },
+    "Zamonaviy oʻzbek adabiyotida sintez muammosi (sheʼriyat va rangtasvir sanʼatlari misolida)": {
+      "title": "The Problem of Synthesis in Modern Uzbek Literature (Poetry and Painting)",
+      "izoh": "Doctor of Philosophy (PhD) dissertation"
+    }
+  },
+  "joylar": {
+    "Toshkent": "Tashkent",
+    "Fargʻona": "Fergana"
+  }
+}

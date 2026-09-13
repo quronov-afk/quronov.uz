@@ -25,6 +25,7 @@
   "yon_ustun": {
     "lugat": "Dictionary of Literary Studies",
     "lugat_izoh": "Terms explained · in Uzbek",
+    "qidiruv": "Search the texts",
     "mualliflar": "Authors",
     "mavzular": "Topics"
   },
@@ -55,5 +56,44 @@
   "olim_sahifasi": {
     "biografiya": "Biography (in Uzbek) →",
     "izoh": "Works are listed under their original titles. English translations of selected works will be added step by step."
+  },
+  "kitoblar": {
+    "sarlavha": "Books (PDF)",
+    "tavsif": "Read and download the books of Dilmurod Quronov and Sadullo Quronov in PDF.",
+    "kirish": "The books are available in full as PDF files for download. All books are in Uzbek.",
+    "tugma": "Books by {ism} (PDF)",
+    "dissertatsiyalar": "Dissertations",
+    "yuklab": "Download PDF · {hajm} MB",
+    "diss_pdf": "Dissertation PDF · {hajm} MB",
+    "avtoreferat": "Author’s abstract PDF · {hajm} MB",
+    "tez_orada": "PDF copy coming soon",
+    "kirill": "in Cyrillic script",
+    "bet": "{n} pages",
+    "kutilmoqda": "Books are being prepared."
+  },
+  "galereya": {
+    "sarlavha": "Gallery",
+    "tavsif": "Videos and photographs featuring Dilmurod Quronov and Sadullo Quronov.",
+    "kirish": "The videos are in Uzbek.",
+    "video": "Video gallery",
+    "foto": "Photo gallery",
+    "alt": "Photograph from the Quronov family archive"
+  },
+  "aloqa": {
+    "sarlavha": "Contact",
+    "tavsif": "Contact details for Dilmurod Quronov and Sadullo Quronov."
+  },
+  "qidiruv": {
+    "sarlavha": "Search",
+    "tavsif": "Full-text search in the works of Dilmurod Quronov and Sadullo Quronov.",
+    "placeholder": "Search the full texts",
+    "tugma": "Search",
+    "izoh": "The search covers the full texts of the works, most of which are in Uzbek. Queries can be typed in Latin or Cyrillic script."
+  },
+  "mavzu": {
+    "yorliq": "Topic",
+    "soni_1": "1 work",
+    "soni": "{n} works",
+    "tavsif": "{n} works by Dilmurod Quronov and Sadullo Quronov on the topic “{nom}”."
   }
 }
