@@ -59,7 +59,7 @@ def matnlar(fayl):
     if not qolgan:
         return None, []
     sarlavha = qolgan[0]
-    tana = [apostrof(q) for q in qolgan[1:] if len(q) > 40]
+    tana = yon_havolasiz([apostrof(q) for q in qolgan[1:] if len(q) > 40])
     # sarlavhadan keyingi bibliografik qator matn emas, manba ma'lumoti
     manba = None
     if tana and "//" in tana[0] and len(tana[0]) < 260:
@@ -91,6 +91,24 @@ def sarlavha_tozala(s):
 def norm(s):
     s = re.sub(r"[^\w\s]", " ", s.lower().replace("ʻ", "").replace("ʼ", ""))
     return re.sub(r"\s+", "", s)
+
+
+# eski sayt yon ustunidagi havolalar va rukn menyusi maqola oxiriga yopishib qolgan
+YON_HAVOLALAR = {norm(s) for s in (
+    "Suhbatlar, nutqlar, soʻz boshilar, taqrizlar",
+    "Ilk avval koʻzimni ishq bilan ochdim...",
+    "A.Oripovning 60-yillar sheʼriyatida tarix konsepsiyasi",
+    "А.Ориповнинг 60-йиллар шеъриятида тарих консепсияси",
+    "Hozirgi sheʼriyatning tasviriy imkoniyatlari haqida",
+    "«Fusuli arbaa» qasidalar majmuasida badiiy sintez masalasi",
+)}
+
+
+def yon_havolasiz(tana):
+    tana = list(tana)
+    while tana and norm(tana[-1]) in YON_HAVOLALAR:
+        tana.pop()
+    return tana
 
 
 def main():

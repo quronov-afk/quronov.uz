@@ -13,7 +13,11 @@
     "uz": "In Uzbek",
     "en": "In English",
     "tr": "In Turkish",
-    "ru": "In Russian"
+    "ru": "In Russian",
+    "tarjima": "English translation"
+  },
+  "maqola": {
+    "tarjima_izoh": "Translated from Uzbek. Original:"
   },
   "oylar": ["January", "February", "March", "April", "May", "June", "July",
             "August", "September", "October", "November", "December"],
@@ -55,7 +59,8 @@
   },
   "olim_sahifasi": {
     "biografiya": "Biography (in Uzbek) →",
-    "izoh": "Works are listed under their original titles. English translations of selected works will be added step by step."
+    "biografiya_en": "Biography →",
+    "izoh": "Works are listed under their original titles unless an English translation is available. More translations will be added step by step."
   },
   "kitoblar": {
     "sarlavha": "Books (PDF)",

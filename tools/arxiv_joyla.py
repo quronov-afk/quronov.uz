@@ -62,6 +62,18 @@ def kirill_kop(p):
     return len(re.findall(r"[а-яёўқғҳ]", p, re.I)) > len(p) * 0.3
 
 
+def takrorsiz(matn, matn_kir):
+    """Sahifada matnning ikkinchi (kirill yoki eski imloli) nusxasi ketma-ket kelgan boʻlsa, olib tashlanadi."""
+    kalit = [norm(p) for p in matn]
+    for uzun in range(len(kalit) // 2, 2, -1):
+        for boshi in range(len(kalit) - 2 * uzun + 1):
+            ikkinchi = boshi + uzun
+            if kalit[boshi:ikkinchi] == kalit[ikkinchi:ikkinchi + uzun]:
+                return (matn[:ikkinchi] + matn[ikkinchi + uzun:],
+                        matn_kir[:ikkinchi] + matn_kir[ikkinchi + uzun:])
+    return matn, matn_kir
+
+
 def main():
     xom = {n["fayl"]: n for n in
            json.loads((ROOT / "data" / "arxiv_xom.json").read_text(encoding="utf-8"))}
@@ -86,6 +98,9 @@ def main():
             # lotin matn ichida kirillda qolgan xatboshilar ham lotinga oʻgiriladi
             matn = [lotinga(p) if kirill_kop(p) else p for p in n["matn"]]
             matn_kir = [p if kirill_kop(p) else kirillga(p) for p in n["matn"]]
+        matn, matn_kir = takrorsiz(matn, matn_kir)
+        matn = [p.replace("Kuranov", "Quronov") for p in matn]
+        matn_kir = [p.replace("Куранов", "Қуронов") for p in matn_kir]
 
         nisbat = max((max(difflib.SequenceMatcher(None, norm(sarlavha), a).ratio(),
                           difflib.SequenceMatcher(None, norm(" ".join(matn)[:400]), b).ratio())

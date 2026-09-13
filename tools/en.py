@@ -33,6 +33,16 @@ ASL_TIL = {"Maqola (ingliz tilida)": "en", "Maqola (turk tilida)": "tr", "Maqola
 # tarjimasi topilmagan matnlar — yigʻish oxirida koʻrsatiladi
 TARJIMASIZ = []
 
+# maqola tarjimalari: data/en/maqolalar/<slug>.json
+TR = {f.stem: json.loads(f.read_text(encoding="utf-8"))
+      for f in sorted((DATA_EN / "maqolalar").glob("*.json"))}
+
+
+def asl_xesh(m):
+    """Oʻzbekcha asl matn izi: oʻzgarsa, tarjima eskirgan deb ogohlantiriladi."""
+    import hashlib
+    return hashlib.sha1("\n".join(m["matn"]).encode("utf-8")).hexdigest()[:12]
+
 QIDIRUV_IKONA = ('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
                  'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                  '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>')
@@ -118,16 +128,24 @@ def meta_qatori(m):
 def yozuv_html(m, yol=""):
     """Roʻyxatdagi bitta yozuv: asl sarlavha, asl til belgisi, matn asl sahifada ochiladi."""
     rang = MUALLIFLAR[m.get("muallif", "Dilmurod Quronov")][1]
-    til = ASL_TIL.get(m["janr"], "uz")
-    parcha = f"\n        <p>{e(qisqacha(m))}</p>" if til == "en" else ""
+    t = TR.get(m["slug"])
+    if t:
+        til, belgi, sarlavha = "en", UI["tillar"]["tarjima"], t["title"]
+        havola = f"{yol}maqola/{m['slug']}.html"
+        parcha = f"\n        <p>{e(qisqacha({'matn': t['paragraphs']}))}</p>"
+    else:
+        til = ASL_TIL.get(m["janr"], "uz")
+        belgi, sarlavha = UI["tillar"][til], m["title"]
+        havola = f"{yol}../maqola/{m['slug']}.html"
+        parcha = f"\n        <p>{e(qisqacha(m))}</p>" if til == "en" else ""
     return f"""      <article class="entry {rang}" data-teg="{e(' '.join(guruhlar(m)))}">
         <div class="entry-meta">
           <span class="author-tag">{e(en_ism(muallif_ismi(m)[0]))}</span>
           <span class="entry-date">{e(' · '.join(meta_qatori(m)))}</span>
-          <span class="til-belgi">{e(UI["tillar"][til])}</span>
+          <span class="til-belgi">{e(belgi)}</span>
           <span class="oqildi" data-kalit="{e(m['slug'])}"></span>
         </div>
-        <h3><a href="{yol}../maqola/{m['slug']}.html" lang="{til}">{e(m['title'])}</a></h3>{parcha}
+        <h3><a href="{havola}" lang="{til}">{e(sarlavha)}</a></h3>{parcha}
       </article>"""
 
 
@@ -232,6 +250,11 @@ def olim_sahifasi(muallif, maqolalar):
     panel = [f'      <a class="tag active" href="#" data-suzgi="">{e(AT["rukn"]["Barchasi"])}</a>']
     panel += [f'      <a class="tag" href="#" data-suzgi="{e(g)}">{e(tarjima(AT["rukn"], g))}</a>'
               for g in RUKNLAR if g in bor]
+    if o["biografiya"] in TR:
+        bio_havola = f'<a href="maqola/{o["biografiya"]}.html">{e(UI["olim_sahifasi"]["biografiya_en"])}</a>'
+    else:
+        bio_havola = (f'<a href="../maqola/{o["biografiya"]}.html" hreflang="uz">'
+                      f'{e(UI["olim_sahifasi"]["biografiya"])}</a>')
     ichki = f"""
 <div class="wrap">
 
@@ -240,7 +263,7 @@ def olim_sahifasi(muallif, maqolalar):
     <div>
       <h1>{e(o["ism"])}</h1>
       <p class="role">{e(o["rol"])}</p>
-      <p class="biografiya-havola"><a href="../maqola/{o["biografiya"]}.html" hreflang="uz">{e(UI["olim_sahifasi"]["biografiya"])}</a></p>
+      <p class="biografiya-havola">{bio_havola}</p>
     </div>
   </div>
 
@@ -533,10 +556,64 @@ def qidiruv_sahifasi():
     return oddiy_sahifa("qidiruv.html", q["sarlavha"], q["tavsif"], ichki, oxiri)
 
 
+def maqola_sahifasi(m, t):
+    """en/maqola/<slug>.html — tarjima qilingan maqola; asl sahifaga havola bilan."""
+    muallif = m.get("muallif", "Dilmurod Quronov")
+    sahifa, rang = MUALLIFLAR[muallif]
+    olim = UI["olimlar"][muallif]
+    ism = en_ism(muallif_ismi(m)[0])
+    meta = [AT["janr"].get(m["janr"], m["janr"])]
+    if m.get("yil"):
+        meta.append(str(m["yil"]))
+    tavsif = f"{ism}. " + qisqacha({"matn": t["paragraphs"]}, 200)
+    meta_html = meta_teglar(t["title"], tavsif, f"en/maqola/{m['slug']}.html", olim["rasm"], "article")
+    tagsarlavha = f'\n  <p class="tagsarlavha">{e(t["subtitle"])}</p>' if t.get("subtitle") else ""
+    matn = "\n".join(f"<p>{e(p)}</p>" for p in t["paragraphs"])
+    return shapka(f"{e(t['title'])} — Quronov.uz", meta_html, "../", sahifa) + f"""
+<div class="wrap maqola {rang}">
+  <div class="maqola-top">
+    <a class="ortga" href="../{sahifa}">← {e(olim["ism"])}</a>
+  </div>
+
+  <h1>{e(t["title"])}</h1>{tagsarlavha}
+  <p class="byline {rang}">{e(ism)}</p>
+  <p class="maqola-meta">{e(' · '.join(meta))}</p>
+  <p class="en-izoh">{e(UI["maqola"]["tarjima_izoh"])} <a href="../../maqola/{m['slug']}.html" hreflang="uz" lang="uz">{e(m["title"])}</a></p>
+
+  <div class="matn">
+{matn}
+  </div>
+
+  <p class="imzo">{e(ism)}</p>
+  <p class="oqilgan" data-kalit="{e(m['slug'])}" hidden></p>
+</div>
+
+<script src="../../oqilgan.js" defer></script>
+""" + podval()
+
+
+def tarjima_sahifalari(maqolalar):
+    papka = EN / "maqola"
+    papka.mkdir(parents=True, exist_ok=True)
+    for eski in papka.glob("*.html"):
+        eski.unlink()
+    bor = {m["slug"]: m for m in maqolalar}
+    for slug, t in TR.items():
+        m = bor.get(slug)
+        if not m:
+            print(f"DIQQAT: tarjimasi bor, lekin saytda yoʻq maqola: {slug}")
+            continue
+        if t.get("asl_xesh") != asl_xesh(m):
+            print(f"DIQQAT: {slug} — oʻzbekcha asl matn tarjimadan keyin oʻzgargan "
+                  f"(yangi iz: {asl_xesh(m)}), tarjimani tekshiring")
+        (papka / f"{slug}.html").write_text(maqola_sahifasi(m, t), encoding="utf-8")
+
+
 def yasash(maqolalar, songgilar, mavzular):
     """site/en/ sahifalarini yasaydi; yasalgan sahifalar sonini qaytaradi."""
     EN.mkdir(exist_ok=True)
     TARJIMASIZ.clear()
+    tarjima_sahifalari(maqolalar)
     sahifalar = {
         "index.html": bosh_sahifa(songgilar, mavzular),
         "kitoblar.html": kitoblar_sahifasi(),

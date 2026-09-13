@@ -3,19 +3,24 @@
 Maqsad: saytning inglizcha versiyasi. Yuqori oʻng burchakda til tanlash tugmasi, **asosiy til — oʻzbekcha**.
 Maqolalar professional tarjimon darajasida, bosqichma-bosqich, sekin-asta tarjima qilinadi.
 
-Holat: **0- va 1-bosqichlar bajarildi** (2026-09-13); navbatda — 2-bosqich (biografiyalar).
+Holat: **0-, 1-bosqichlar va 2a bajarildi** (2026-09-13); navbatda — 2b («Olim haqida» maqolalari).
 
 ---
 
 ## Umumiy qoidalar
 
-- **Manzillar:** oʻzbekcha sahifalar joyida qoladi, inglizchasi `site/en/` ostida (`/en/index.html`,
-  `/en/articles/<slug>.html` …). Har juft sahifada `hreflang` havolalari.
+- **Manzillar:** oʻzbekcha sahifalar joyida qoladi, inglizchasi `site/en/` ostida, oʻzbekcha yoʻlni
+  takrorlab (`/en/index.html`, `/en/maqola/<slug>.html` …) — shunda til tugmasi va `hreflang` juftligi
+  oʻz-oʻzidan topiladi.
 - **Til tugmasi:** sarlavha satrining oʻng burchagida `UZ | EN`. Tarjimasi yoʻq sahifada EN bosilsa,
   inglizcha bosh sahifaga olib boradi (yoki «This article is available in Uzbek» belgisi).
-- **Tarjima maʼlumoti:** `data/en/` — har maqola alohida JSON (`<slug>.json`): `title`, `subtitle`,
-  `paragraphs`, `holat` (`qoralama` / `koʻrib chiqilgan`), `tarjima_sanasi`.
-  Oʻzbekcha asl matn oʻzgarsa, tarjima eskirgan deb belgilanadi.
+- **Tarjima maʼlumoti:** `data/en/maqolalar/<slug>.json`: `title`, `subtitle`, `paragraphs`,
+  `holat` (`qoralama` / `koʻrib chiqilgan`), `tarjima_sanasi`, `asl_xesh` (tarjima paytidagi oʻzbekcha
+  matn izi). Oʻzbekcha asl matn oʻzgarsa, yigʻishda «DIQQAT: … asl matn oʻzgargan» chiqadi.
+- **Tarjima sahifasi:** sarlavha ostida «Translated from Uzbek. Original: …» havolasi; roʻyxatlarda
+  inglizcha sarlavha, «English translation» belgisi va qisqa parcha bilan chiqadi.
+- **Bibliografik roʻyxatlar** (masalan, biografiyadagi kitoblar) asl holida qoladi, oxiriga kvadrat
+  qavsda inglizcha nomi qoʻshiladi: `… Akademnashr, 2018. [Twin Arts: a monograph]`.
 - **Izchil atamalar:** `data/en/atamalar.json` — asosiy terminlar lugʻati (masalan: inson konsepsiyasi →
   *concept of the human*, badiiy sintez → *artistic synthesis*, badiiy tafakkur → *artistic thinking*,
   romaniy tafakkur → *novelistic thinking*, mumtoz adabiyot → *classical literature*). Har yangi atama
@@ -81,7 +86,8 @@ Har partiyadan keyin: sayt yigʻiladi, tekshiriladi, push qilinadi, bu faylda ho
 |---|---|---|
 | 0 | Infratuzilma, til tugmasi | bajarildi (2026-09-13) |
 | 1 | Asosiy sahifalar | bajarildi (2026-09-13) |
-| 2 | Biografiyalar | kutilmoqda |
+| 2a | Tarjima sahifalari infratuzilmasi; ikkala biografiya; «Mustaqillikning 30 yilligi» yangiligi | bajarildi (2026-09-13), holati — qoralama |
+| 2b | «Olim haqida»: B. Rahmonov, Q. Yoʻldosh, «Galaktikada bir kun» haqida 3 ta yozuv | kutilmoqda |
 | 3.1 | S. Quronov: inson konsepsiyasi, roman (≈12) | kutilmoqda |
 | 3.2 | S. Quronov: badiiy sintez (≈12) | kutilmoqda |
 | 3.3 | D. Quronov: Choʻlpon, Qodiriy (≈12) | kutilmoqda |
