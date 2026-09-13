@@ -762,3 +762,21 @@ img.avatar { object-fit: cover; background: var(--surface); }
   border: 0; border-radius: 4px; background: transparent; color: var(--text-muted); cursor: pointer;
 }
 .qidiruv-ikona:hover { color: var(--text); background: var(--surface); }
+
+/* izohlar (snoskalar) */
+.izoh-belgi { font-size: 0.66em; line-height: 0; vertical-align: super; margin-left: 1px; }
+.izoh-belgi a { color: var(--dilmurod); padding: 0 1px; font-family: var(--sans); }
+.sq .izoh-belgi a { color: var(--sadullo); }
+.izoh-belgi a:hover { text-decoration: underline; }
+.matn .izohlar { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--border); }
+.matn .izohlar-sarlavha {
+  font-family: var(--sans); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted); margin: 0 0 12px; text-indent: 0; text-align: left;
+}
+.izohlar ol { margin: 0; padding-left: 26px; font-size: 15px; line-height: 1.55; color: var(--text-secondary); }
+.izohlar li { margin: 0 0 7px; padding-left: 2px; }
+.izohlar li::marker { font-family: var(--sans); font-size: 13px; color: var(--text-muted); }
+.izohlar li:target { background: #fbf3de; }
+.izoh-ortga { color: var(--text-muted); font-family: var(--sans); margin-left: 4px; }
+.izoh-ortga:hover { color: var(--text); }
+[id^="havola-"], [id^="izoh-"] { scroll-margin-top: 24px; }

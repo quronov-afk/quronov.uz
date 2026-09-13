@@ -85,8 +85,17 @@ def manba_lotin(s):
     return re.sub(r"\s+", " ", s).strip(" .,")
 
 
+USTKI_RAQAM = re.compile(r"[⁰¹²³⁴⁵⁶⁷⁸⁹]+")
+ODDIY_RAQAM = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+
+
+def belgisiz(s):
+    """Izoh havolalari (ustki raqamlar) olib tashlangan matn — parcha va qidiruv uchun."""
+    return USTKI_RAQAM.sub("", s)
+
+
 def qisqacha(m, uzunlik=500):
-    matn = " ".join(m["matn"])
+    matn = belgisiz(" ".join(m["matn"]))
     if len(matn) <= uzunlik:
         return matn
     kesim = matn[:uzunlik]
@@ -311,6 +320,29 @@ def mavzudoshlarni_topish(maqolalar, soni=3):
                           for ball, j in ballar[:soni] if ball > 0.05]
 
 
+def izohli(p, m, yozuv):
+    """Xatboshi: ustki raqamlar izohga olib boruvchi havolaga aylanadi (izohi bor maqolalarda)."""
+    if not m.get("izohlar"):
+        return e(p)
+    def havola(t):
+        n = t.group(0).translate(ODDIY_RAQAM)
+        return (f'<sup class="izoh-belgi"><a href="#izoh-{yozuv}-{n}" id="havola-{yozuv}-{n}">'
+                f'{n}</a></sup>')
+    return USTKI_RAQAM.sub(havola, e(p))
+
+
+def izohlar_html(m, yozuv):
+    izohlar = m.get("izohlar" if yozuv == "lat" else "izohlar_kir") or []
+    if not izohlar:
+        return ""
+    sarlavha, ortga = ("Izohlar", "Matnga qaytish") if yozuv == "lat" else ("Изоҳлар", "Матнга қайтиш")
+    qatorlar = "\n".join(
+        f'    <li id="izoh-{yozuv}-{i}">{e(t)} <a class="izoh-ortga" href="#havola-{yozuv}-{i}" '
+        f'aria-label="{ortga}">↩</a></li>' for i, t in enumerate(izohlar, 1))
+    return (f'\n<section class="izohlar">\n  <p class="izohlar-sarlavha">{sarlavha}</p>\n  <ol>\n'
+            f'{qatorlar}\n  </ol>\n</section>')
+
+
 def maqola_sahifasi(m):
     meta = meta_qatori(m)
     muallif = m.get("muallif", "Dilmurod Quronov")
@@ -318,8 +350,8 @@ def maqola_sahifasi(m):
     ism_lat, ism_kir = muallif_ismi(m)
     dq = ' class="active"' if muallif == "Dilmurod Quronov" else ""
     sq = ' class="active"' if muallif != "Dilmurod Quronov" else ""
-    lat = "\n".join(f"<p>{e(p)}</p>" for p in m["matn"])
-    kir = "\n".join(f"<p>{e(p)}</p>" for p in m["matn_kir"])
+    lat = "\n".join(f"<p>{izohli(p, m, 'lat')}</p>" for p in m["matn"]) + izohlar_html(m, "lat")
+    kir = "\n".join(f"<p>{izohli(p, m, 'kir')}</p>" for p in m["matn_kir"]) + izohlar_html(m, "kir")
 
     rasm = "img/dilmurod.jpg" if muallif == "Dilmurod Quronov" else "img/sadullo.jpg"
     meta_html = meta_teglar(m["title"], f"{ism_lat}. " + qisqacha(m, 200),
@@ -571,7 +603,7 @@ def galereya_sahifasi():
 def qidiruv_yasash(maqolalar):
     """Butun matn boʻyicha qidiruv: site/qidiruv.json indeksi va site/qidiruv.html sahifasi."""
     indeks = [{"s": m["slug"], "t": m["title"], "a": muallif_ismi(m)[0], "y": m.get("yil") or "",
-               "j": m["janr"], "m": re.sub(r"\s+", " ", " ".join(m["matn"]))}
+               "j": m["janr"], "m": re.sub(r"\s+", " ", belgisiz(" ".join(m["matn"])))}
               for m in maqolalar]
     (SITE / "qidiruv.json").write_text(json.dumps(indeks, ensure_ascii=False, separators=(",", ":")),
                                        encoding="utf-8")

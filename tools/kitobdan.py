@@ -115,16 +115,17 @@ def sarlavha_joyi(pages, nom, boshlanish, oxiri=None):
                     break
                 nisbat = difflib.SequenceMatcher(None, n, kalit).ratio()
                 if nomzod is None or nisbat > nomzod[2] + 0.02:
-                    nomzod = (p, i + j - 1, nisbat)
+                    nomzod = (p, i + j - 1, nisbat, i)
                 if i + j < len(lines):
                     birikma = birikma + " " + lines[i + j].strip()
                 else:
                     break
             if nomzod and nomzod[2] > 0.9:
-                return nomzod[:2]
+                return nomzod[0], nomzod[1], nomzod[3]
             if nomzod and nomzod[2] > 0.8 and (eng_yaxshi is None or nomzod[2] > eng_yaxshi[2]):
                 eng_yaxshi = nomzod
-    return eng_yaxshi[:2] if eng_yaxshi else None
+    # (sahifa, sarlavhaning oxirgi qatori, sarlavhaning birinchi qatori)
+    return (eng_yaxshi[0], eng_yaxshi[1], eng_yaxshi[3]) if eng_yaxshi else None
 
 
 def joylarni_topish(pages, nomlar, mundarija_sahifa):
@@ -181,6 +182,87 @@ def defis_tiklash(matn, defisli):
     matn = re.sub(r"(\w+)-\s*\n\s*(\w+)", almash, matn)
     # tirnoqdan keyingi qo'shimcha: «...»- ni → «...»-ni
     return re.sub(r"([»”\"'\)])-\s*\n\s*(\w+)", r"\1-\2", matn)
+
+
+RAQAM_QATOR = re.compile(r"\s*\d{1,3}\s*")
+USTKI = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
+IZOH_BELGI = re.compile(r"⁅\d+\.\d+⁆")
+
+
+def izohlarni_ajrat(page, sahifa):
+    """Sahifa pastidagi izohlarni (snoskalarni) asosiy matndan ajratadi.
+
+    PDF'da izoh bloki: yolgʻiz raqamli qator («18»), undan keyin izoh matni; eng oxirida
+    sahifa raqami. Matndagi havola raqami («…gan19») ⁅sahifa.raqam⁆ belgisiga almashtiriladi.
+    Sahifa raqami ham olib tashlanadi — aks holda boʻlingan soʻzga yopishadi («maса-/4/ласига»).
+    Qaytaradi: (izohsiz sahifa matni, {belgi: (izoh matni, havolasi topildimi)}).
+    """
+    lines = page.split("\n")
+    oxirgi = len(lines)
+    while oxirgi and not lines[oxirgi - 1].strip():
+        oxirgi -= 1
+    pastki = oxirgi - 1 if oxirgi and RAQAM_QATOR.fullmatch(lines[oxirgi - 1]) else oxirgi
+    izohsiz = "\n".join(lines[:pastki])
+
+    raqamli = [j for j in range(pastki) if RAQAM_QATOR.fullmatch(lines[j])]
+    boshi = None
+    for j in raqamli:
+        keyingi = next((l for l in lines[j + 1:pastki] if l.strip()), None)
+        if keyingi is None or RAQAM_QATOR.fullmatch(keyingi):
+            continue
+        qolgan = [int(lines[k]) for k in raqamli if k >= j]
+        if qolgan == list(range(qolgan[0], qolgan[0] + len(qolgan))):
+            boshi = j
+            break
+    if boshi is None:
+        return izohsiz, {}
+
+    izohlar, joriy = {}, None
+    for l in lines[boshi:pastki]:
+        if RAQAM_QATOR.fullmatch(l):
+            joriy = int(l)
+            izohlar[joriy] = []
+        elif l.strip():
+            izohlar[joriy].append(l.strip())
+
+    tana = "\n".join(lines[:boshi]).rstrip()
+    natija, joy = {}, 0
+    for n in sorted(izohlar):
+        matn = re.sub(r"(\w)-\n(\w)", r"\1\2", "\n".join(izohlar[n])).replace("\n", " ")
+        belgi = f"⁅{sahifa}.{n}⁆"
+        # raqam soʻz yoki tinish belgisiga yopishgan boʻladi: «…di»gan19», «davri46deb»
+        havola = re.compile(rf"(?<=[^\s\d№/(\[–-]){n}(?!\d)").search(tana, joy)
+        if not havola and not natija:
+            # birinchi raqamning havolasi yoʻq — bu izoh emas (masalan, sheʼrdagi misra raqamlari)
+            return izohsiz, {}
+        if havola:
+            tana = tana[:havola.start()] + belgi + tana[havola.end():]
+            joy = havola.start() + len(belgi)
+        natija[belgi] = (re.sub(r"\s+", " ", matn).strip(), bool(havola))
+    return tana, natija
+
+
+def izohlarni_joyla(lat, kir, baza, lotin):
+    """⁅sahifa.raqam⁆ belgilarini maqola ichida 1 dan raqamlangan ustki raqamlarga aylantiradi."""
+    tartib = {}
+    for p in lat:
+        for belgi in IZOH_BELGI.findall(p):
+            tartib.setdefault(belgi, len(tartib) + 1)
+
+    def almash(p):
+        return IZOH_BELGI.sub(lambda t: str(tartib.get(t.group(0), "")).translate(USTKI), p)
+
+    izoh_lat, izoh_kir = [], []
+    for belgi in tartib:
+        matn = baza[belgi][0]
+        if lotin:
+            l = imlo_tuzat(apostrof(matn))
+            k = kirillga(l)
+        else:
+            k, l = matn, imlo_tuzat(lotinga(matn))
+        izoh_lat.append(l)
+        izoh_kir.append(k)
+    return [almash(p) for p in lat], [almash(p) for p in kir], izoh_lat, izoh_kir
 
 
 def abzaclar(matn):
@@ -360,6 +442,12 @@ def main():
     hammasi = []
     for kitob in KITOBLAR:
         pages = pdf_pages(PDF_DIR / kitob["fayl"], kitob["tuzatish"])
+        izoh_bazasi = {}
+        for i in range(kitob["mundarija"] - 1):
+            pages[i], izohlar = izohlarni_ajrat(pages[i], i + 1)
+            izoh_bazasi.update(izohlar)
+        yetim = [b for b, (_, topildi) in izoh_bazasi.items() if not topildi]
+        print(f"   izohlar: {len(izoh_bazasi)}, havolasi topilmagan: {len(yetim)} {yetim[:6]}")
         mund = pages[kitob["mundarija"] - 1]
         nomlar = parse_mundarija(mund)
         print(f"\n{kitob['nom']}: mundarijada {len(nomlar)} ta nom")
@@ -368,13 +456,20 @@ def main():
 
         joylar = joylarni_topish(pages, nomlar, kitob["mundarija"] - 1)
 
-        for idx, (nom, (p, satr)) in enumerate(joylar):
-            oxiri = joylar[idx + 1][1] if idx + 1 < len(joylar) else (kitob["mundarija"] - 1, 0)
-            bolaklar = ["\n".join(pages[p].splitlines()[satr + 1:])]
+        for idx, (nom, (p, satr, bosh)) in enumerate(joylar):
+            # havolasi sarlavhaning oʻzida turgan izoh (masalan, hammualliflik haqida)
+            sarlavha_qatorlari = "\n".join(pages[p].splitlines()[bosh:satr + 1])
+            sarlavha_izohi = [izoh_bazasi[b][0] for b in IZOH_BELGI.findall(sarlavha_qatorlari)]
+            # keyingi maqola sarlavhasining birinchi qatorigacha olinadi
+            oxiri = joylar[idx + 1][1] if idx + 1 < len(joylar) else (kitob["mundarija"] - 1, 0, 0)
+            if oxiri[0] == p:
+                bolaklar = ["\n".join(pages[p].splitlines()[satr + 1:oxiri[2]])]
+            else:
+                bolaklar = ["\n".join(pages[p].splitlines()[satr + 1:])]
             for q in range(p + 1, oxiri[0]):
                 bolaklar.append(pages[q])
             if oxiri[0] > p:
-                bolaklar.append("\n".join(pages[oxiri[0]].splitlines()[:oxiri[1]]))
+                bolaklar.append("\n".join(pages[oxiri[0]].splitlines()[:oxiri[2]]))
             matn = defis_tiklash("\n".join(bolaklar), defisli)
             banda = abzaclar(matn)
             if len("".join(banda)) < 900:
@@ -389,6 +484,12 @@ def main():
             else:
                 lat_nom, kir_nom = sarlavha_tozalash(lotinga(nom)), nom
                 lat, kir = [imlo_tuzat(lotinga(b)) for b in banda], banda
+            lat, kir, izoh_lat, izoh_kir = izohlarni_joyla(lat, kir, izoh_bazasi, kitob.get("lotin"))
+            tagsarlavha = None
+            if sarlavha_izohi:
+                matn = " ".join(sarlavha_izohi)
+                tagsarlavha = imlo_tuzat(apostrof(matn) if kitob.get("lotin") else lotinga(matn))
+                print(f"   sarlavha izohi: {lat_nom[:40]} — {tagsarlavha}")
 
             asl = asl_manba(kir_nom, yozuvlar)
             janr = "Suhbat" if re.search(r"суҳбат|suhbat", nom, re.I) else "Maqola"
@@ -405,6 +506,9 @@ def main():
                 "belgi": len("".join(banda)),
                 "matn": lat,
                 "matn_kir": kir,
+                "izohlar": izoh_lat,
+                "izohlar_kir": izoh_kir,
+                "tagsarlavha": tagsarlavha,
             })
 
     korilgan = set()
