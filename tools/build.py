@@ -162,9 +162,11 @@ PODVAL = """
 <footer class="site-footer">
   <div class="footer-inner">
     <span>© 2026 Quronov.uz</span>
+    <span class="tashrif" hidden></span>
     <span><a href="mailto:squronov@gmail.com">squronov@gmail.com</a></span>
   </div>
 </footer>
+<script src="/tashrif.js" defer></script>
 
 </body>
 </html>
@@ -727,7 +729,7 @@ def havolalarni_tekshirish():
         for havola in re.findall(r'(?:href|src)="([^"#:]+)"', matn):
             if havola.startswith(("http", "//", "mailto")):
                 continue
-            if not (fayl.parent / havola).exists():
+            if not ((SITE / havola[1:]) if havola.startswith("/") else (fayl.parent / havola)).exists():
                 xatolar.append(f"{fayl.relative_to(SITE)}: yo'q fayl — {havola}")
     return xatolar
 

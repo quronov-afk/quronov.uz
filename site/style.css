@@ -619,6 +619,7 @@ img.avatar { object-fit: cover; background: var(--surface); }
 }
 
 .footer-inner a { color: var(--text-secondary); }
+.footer-inner .tashrif { margin-left: auto; }
 .footer-inner a:hover { color: var(--text); }
 
 @media (max-width: 700px) {
